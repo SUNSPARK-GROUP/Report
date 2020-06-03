@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<!--text/html-->
+<head>
+<meta content="application/vnd.ms-excel; charset=utf-8" http-equiv="Content-Type">
+<title>OracleSaleCalc</title>
+</head>
+<body>
+<style> 
+.showdata{width:1200px;border:2px solid blue;} 
+.showdata caption{border:2px solid blue;font-size: 16px;height:auto;}
+.showdata th{border:1px solid blue;font-size: 16px;height:auto;}/*vertical-align: middle;*/
+.showdata td{
+	font: bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;text-align:center} 
+         
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<script>
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+function ShowDialog(url) {
+var tests=window.open(url,"Detail","height=500,width=550,left=150,top=50"); }
+
+function getcbox1(){
+   var ck1=form1.Checkbox1;
+   var ck2=form1.Checkbox2;
+   if (ck1.checked)  {
+    ck2.checked=false;}
+   else { ck2.checked=true;}
+   }
+function getcbox2(){
+   var ck1=form1.Checkbox1;
+   var ck2=form1.Checkbox2;
+   if (ck2.checked)  {
+    ck1.checked=false;}
+   else { ck1.checked=true;}
+}
+function serchsdata(sys){
+  var aid=document.getElementById("area0").value;
+  var mid=document.getElementById("area1").value;
+  var sid=document.getElementById("area2").value;
+  var sp=document.getElementById("shop0").value;
+  var sy=document.getElementById("ISdate").value;
+  var ey=document.getElementById("IEdate").value;
+  var CK1=form1.Checkbox1;
+  if (CK1.checked) { window.location.href = "?sc="+sys+"&area01="+aid+"&area11="+mid+"&area21="+sid+"&Sday="+sy+"&Eday="+ey+"&shop="+sp+"&CK1=ON"; }
+  else { window.location.href = "?sc="+sys+"&area01="+aid+"&area11="+mid+"&area21="+sid+"&Sday="+sy+"&Eday="+ey+"&shop="+sp+"&CK1=OFF"; }
+
+}
+</script type="text/javascript" src="http://code.jquery.com/jquery-latest.js">
+<div style="width: 700px; height: 187px; ">
+<div style="width: 300px; height: 20px;  float:left;">
+<p style="width: 300px; height: 20px;"><label  style="font-weight:bold;font-size:16px;color:#0000AA">營業大區：</label>    
+<select id="area0" name="area01" style="font-size:16px" onChange="serchsdata('0')">
+       <option value="" ></option>
+        {% for a in area0%}
+        {% if a == area01%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+    </select></p>
+	<!--input name="Button2" type="button" value="搜尋地址號" onclick="ShowDialog('company.html')" class="auto-style1"-->
+<!--p style="width: 300px; height: 20px; left:200px"--><label  style="font-weight:bold;font-size:16px;color:#0000AA">營業中區：</label>    
+<select id="area1" name="area11" style="font-size:16px" onChange="serchsdata('0')">
+<option value="" ></option>
+        {% for a in area1%}
+        {% if a == area11%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+    </select><!--/p-->
+<p style="width: 300px; height: 20px; left:200px"><label  style="font-weight:bold;font-size:16px;color:#0000AA">營業小區：</label>    
+<select id="area2" name="area02" style="font-size:16px" onChange="serchsdata('0')">
+<option value="" ></option>
+        {% for a in area2%}
+        {% if a == area21%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+    </select></p>
+<p style="width: 435px; height: 20px; left:200px"><label  style="font-weight:bold;font-size:16px;color:#0000AA">門市代碼：</label>    
+<select id="shop0" name="shop01" style="font-size:16px">
+<option value="" ></option>
+        {% for a in shop0%}
+        {% if a == shop01%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+    </select></p>
+</div>
+<div style="width: 300px; height: 20px; float:left;">
+<p style="width: 300px; height: 20px;">
+	&nbsp;<label style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp;&nbsp;
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>&nbsp;	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至    </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+{% if CK1 == 'ON' %}
+<input  name="Checkbox1"  type="checkbox" checked="checked" style="font-size:16px" value="ON">
+{% else %}
+<input  name="Checkbox1"  type="checkbox" value="ON">
+{% endif %}
+          <label id="Label1" style="font-weight:bold;font-size:16px;color:#AA0000">不含首批</label>&nbsp;
+<input name="Submit1" type="button" style="font-size:16px;color:#0000AA" value="確定" onclick="serchsdata('1')">
+<label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label></p>
+
+</div>
+</div>
+    <!--input name="2EXCEL" type="submit" style="font-size:16px;color:#0000AA" value="匯出EXCEL" ><-->
+
+</form>
+
+
+</header>
+<form method="post">
+<input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()">
+</form>
+<table id="schdata" class="showdata">
+<!--thead style="display:block;"-->
+<caption>{{reportmes|safe}}</caption>
+<tr>            
+            {% for t in title%}            
+            <!--th style="width:100px;">{{t}}</th-->
+            {{t|safe}}
+            {% endfor %}
+            
+            </tr>   
+     <!--/thead>
+    <tbody style="height:500px;overflow:auto;display:block"-->         
+            {% for r in osaledata%}
+                <tr>{% for l in r %}                    
+                    {{l|safe}}
+                   {% endfor %}                   
+                </tr>
+            {% endfor %}
+<!--/tbody-->
+</table>
+</body>
+
+</html>

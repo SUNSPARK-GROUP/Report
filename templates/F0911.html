@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<!--text/html-->
+<head>
+<meta content="application/vnd.ms-excel; charset=utf-8" http-equiv="Content-Type">
+<title>F0911</title>
+</head>
+<body>
+<style> 
+.showdata{width:1200px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+} 
+<select id="acct" name="accts">
+        {% for r in acctls%}          
+          {% if r.mac == macct %}
+          <option value="{{r.mac}}" selected>{{r.mac}}</option>
+          {% else %}
+          <option value="{{r.mac}}" >{{r.mac}}</option>
+          {% endif %}
+        {% endfor %}
+    </select>          
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<script>
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+</script>
+<p style="width: 800px; height: 20px;"><label  style="font-weight:bold;font-size:16px;color:#0000AA">會計科目</label>
+          
+    <!--label  style="font-weight:bold;font-size:16px;color:#0099FF"-->
+	<input name="acct" style="width: 135px;font-size:16px" type="text" value="{{acct}} " >
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA">子     目</label>
+	<input name="subacct" style="width: 92px;font-size:16px" type="text"  value="{{subacct}}">部門
+          <select id="dept" name="depts" style="font-size:16px">
+        {% for d in deptls%}
+        {% if d.depno == dept%}
+          <option value="{{d.depno}}" selected>{{d.depname}}</option>
+        {% else %}
+          <option value="{{d.depno}}" >{{d.depname}}</option>
+        {% endif %}
+        {% endfor %}
+    </select><label  style="font-weight:bold;font-size:16px;color:#0000AA">{{acct}}.{{subacct}}</label>
+    <label  style="font-weight:bold;font-size:16px;color:#0000AA">{{dept}}</label></p>
+    <!--input name="2EXCEL" type="submit" style="font-size:16px;color:#0000AA" value="匯出EXCEL" ><-->
+	<p style="width: 800px; height: 20px;">
+	&nbsp;<label style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp; &nbsp;
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>&nbsp;	
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至 </label>
+    <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>&nbsp;
+<input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="確定" >
+<label id="msl1" style="font-size:16px;color:#0000AA">{{mess}}</label></p>
+
+</form>
+</header><a href="MEDIA/{{efilename}}" download="{{efilename}}">excel下載</a>
+<!--form method="post">
+	<input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()"></form-->
+<table id="schdata" class="showdata">
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                <th style="width:5%">總帳日期</th>
+                <th style="width:10%">科目代碼</th>
+                <th style="width:25%">說明</th>
+                <th style="width:10%">其他備註</th>
+                <th style="width:10%">借方金額</th>
+                <th style="width:10%">貸方金額</th>
+                <th style="width:10%">科目餘額</th>
+                <th style="width:10%">批次號碼</th>
+                <th style="width:10%">地址號</th>
+                <!--th>發票號碼</th>
+                <th>課稅</th>
+                <th>稅率</th>
+                <th>發票格式</th-->
+            </tr>            
+            {% for r in F0911%}
+                <tr>{% for l in r %}                    
+                    <td> {{l}} </td> 
+                   {% endfor %}                   
+                </tr>
+            {% endfor %}
+
+</table>
+</body>
+
+</html>

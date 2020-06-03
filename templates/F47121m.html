@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>F4211SALEITEM</title>
+</head>
+<body>
+<style>
+#div1{
+	width:1350px;
+}
+.showdata{width:520px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0000AA;
+}
+#sform{
+	width:61%;
+	float:right;
+}
+section{
+	width:500px;
+}
+#EIPform{
+	width: 60%;
+}
+@media screen and (max-width:1366px){
+#div1{
+	width:1100px;
+}
+.showdata{width:550px;border:1px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 17px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 17px;
+	color: #0000AA;
+}
+#sform{
+	width:50%;
+	float:right;
+}
+section{
+	width:450px;
+}
+#EIPform{
+	width:100%;
+}
+}
+</style>
+<header>
+  <form id="form1"  runat="server"  method="get"  >
+    <script >
+function exportExcel(){
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+function tck(){
+var form = document.getElementById("takeitem");
+var table = document.getElementById("eipdata");
+
+if (String(form.dc.length)=='undefined'){
+var dcs= "F47121detel?eipid="+table.rows[1].cells[5].innerText;
+       var obj = document.getElementById('EIPform');
+       obj.setAttribute("src",dcs);
+ }
+else{
+    for(var i=0; i<form.dc.length;i++){
+        if(form.dc[i].checked){
+          var dcs= "F47121detel?eipid="+table.rows[i+1].cells[5].innerText;
+          var obj = document.getElementById('EIPform');
+          obj.setAttribute("src",dcs);
+           break;
+           }
+    }
+   } 
+   
+}           
+function setsrc(ms) { 
+           obj.setAttribute("src",ms);
+           }
+var aa = function(){
+   	var label=document.getElementById("msl1");
+	var t=setTimeout("window.location.reload()",0);
+	label.innerText="JDE轉入中，稍後將會重整";
+};
+</script>
+    <div style="height: 30px;">
+      <button type="submit" id="Submit1" name="Submit1" style="font-size:16px;color:#0000AA">EIP查詢</button>
+      <label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+    </div>
+  </form>
+</header>
+<div id="div1">
+<form id="takeitem">
+  <section style="float:left;height:533px; ">
+    <table id="eipdata"  class="showdata">
+      <caption>
+      {{reportmes|safe}}
+      </caption>
+      <tr>
+        <th>選取</th>
+        <th>申請部門</th>
+        <th>使用人</th>
+        <th>用途</th>
+        <th>領/還</th>
+        <th>EIP</th>
+      </tr>
+      {% for r in f47121m%}
+      <tr>
+        <td><input type="radio" name="dc"  onclick="tck()"></td>
+        {% for l in r %}
+        <td > {{l}} </td>
+        {% endfor %} </tr>
+      {% endfor %}
+    </table>
+  </section>
+  <div id="sform" style="">
+    <IFRAME id="EIPform" style="height:500px; border:none"></IFRAME>
+  </div>
+</form>
+</div>
+</body>
+<body>
+</body>
+</html>

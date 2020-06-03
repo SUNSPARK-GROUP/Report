@@ -1,0 +1,8 @@
+﻿body {margin:20px}
+#container {width:940px; margin:auto}
+header {display:block; clear:both; margin:0 0 10px}
+footer {display:block; clear:both; text-align:left;
+background:linear-gradient(to bottom, lightblue, white)}
+article {float:left; width:600px; margin:0 0 20px}
+aside {float:right; width:160px; margin:0 0 10px;
+border:solid 1px lightgray; border-radius:10px}

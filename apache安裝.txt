@@ -1,0 +1,58 @@
+apache 安裝
+1.httpd-2.4.39 中Apache24資料夾複製到c:下
+
+2.至C:\Apache24\conf開啟httpd.conf 修改
+Listen 8088
+ServerName localhost:8088
+
+3.安裝Microsoft Visual C++ 2015 可轉散發套件
+vc_redist.x64.exe
+
+4.把這個mod_wsgi(mod_wsgi-4.6.5+ap24vc14-cp36-cp36m-win32)放到python的根目錄中，然後打開cmd cd到 python的根目錄，執行下列指令：
+
+>> pip install mod_wsgi-4.6.5+ap24vc14-cp36-cp36m-win32
+>> mod_wsgi-express module-config
+將三行執行結果再複製至C:\Apache24\conf\httpd.conf 內:
+LoadFile "c:/python36-32/python36.dll"
+LoadModule wsgi_module "c:/python36-32/lib/site-packages/mod_wsgi/server/mod_wsgi.cp36-win32.pyd"
+WSGIPythonHome "c:/python36-32"
+
+5.C:\Apache24\conf\httpd.conf 內再新增下面內容:
+
+WSGIScriptAlias / C:/Users\Administrator/chrisdjango/chrisdjango/wsgi.py
+
+WSGIPythonPath  C:/Users/Administrator/chrisdjango
+  
+<Directory C:/Users/Administrator/chrisdjango/chrisdjango>  
+<Files wsgi.py>  
+    Require all granted  
+</Files>  
+</Directory>
+
+Alias /static C:/Users/Administrator/chrisdjango/static
+
+<Directory C:/Users/Administrator/chrisdjango/static>
+  
+    AllowOverride None
+  
+    Options None
+  
+    Require all granted
+
+</Directory> 
+
+Alias /image C:/Users/Administrator/chrisdjango/image
+
+<Directory C:/Users/Administrator/chrisdjango/image>
+  
+    AllowOverride None
+  
+    Options None
+  
+    Require all granted
+
+</Directory>
+
+6.安裝 apache 服務，至cmd命令列下C:\Apache24\bin\httpd.exe  -k  install，至windows 服務啟動apache
+
+7.pip install django-pyodbc-azure

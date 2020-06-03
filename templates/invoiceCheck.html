@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html>
+<!--text/html-->
+<head>
+<meta content="application/vnd.ms-excel; charset=utf-8" http-equiv="Content-Type">
+<title>invoiceCheck</title>
+</head>
+<body>
+<style> 
+.showdata{width:1200px;border:2px solid blue;} 
+.showdata caption{border:2px solid blue;font-size: 16px;height:auto;}
+.showdata th{border:1px solid blue;font-size: 16px;height:auto;}/*vertical-align: middle;*/
+.showdata td{
+	font: bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;text-align:center} 
+         
+.auto-style1 {
+	font-weight: bold;
+}
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<script>
+{% comment %} function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+} {% endcomment %}
+function ShowDialog(url) {
+var tests=window.open(url,"Detail","height=500,width=550,left=150,top=50"); }
+
+{% comment %} function getcbox1(){
+   var ck1=form1.Checkbox1;
+   var ck2=form1.Checkbox2;
+   if (ck1.checked)  {
+    ck2.checked=false;}
+   else { ck2.checked=true;}
+   }
+function getcbox2(){
+   var ck1=form1.Checkbox1;
+   var ck2=form1.Checkbox2;
+   if (ck2.checked)  {
+    ck1.checked=false;}
+   else { ck1.checked=true;}
+   } {% endcomment %}
+
+</script type="text/javascript" src="http://code.jquery.com/jquery-latest.js">
+	<p style="width: 800px; height: 20px;">
+	&nbsp;<label style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp; &nbsp;
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>&nbsp;	
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至 </label>
+    <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>&nbsp;
+<input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="確定" >
+<label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label></p>
+
+</form>
+</header>
+<a href="MEDIA/{{efilename}}" download="{{efilename}}">excel下載</a>
+{% comment %} <form method="post">
+	<input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()">
+</form> {% endcomment %}
+<table id="schdata" class="showdata">
+<!--thead style="display:block;"-->
+<caption>{{reportmes|safe}}</caption>
+<tr>            
+    {% for t in title%}            
+    <!--th style="width:100px;">{{t}}</th-->
+    {{t|safe}}
+    {% endfor %}
+    
+    </tr>   
+    {% for r in invoiceCheck%}
+        <tr>{% for l in r %}                    
+            <td>{{l|safe}}</td>
+           {% endfor %}                   
+        </tr>
+    {% endfor %}
+    <tr>
+     <td>{{DataRow}}</td>
+     <td></td>
+     <td>{{Void}}</td>
+     <td></td>
+     <td></td>
+     <td>{{TAXDATA1}}</td>
+     <td>{{TAXDATA2}}</td>
+     <td>{{TAXDATA3}}</td>
+     <td></td>
+     <td></td>
+     <td></td>
+     <td></td>
+    </tr>
+</table>
+</body>
+
+</html>

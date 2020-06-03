@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>森邦總部資訊系統</title>
+</head>
+
+<body style="height: 299px" bgcolor="#B0E0E6">
+
+<div></div>
+
+<h1 align="center"><span style="font-family:DFKai-sb;">森邦總部資訊系統</span></h1>
+
+<h3 align="center">
+    
+<div style="height: 177px">
+	<div style="height: 49px">
+		<label id="Label1" style="font-size: 25px; font-weight: bolder; color: #6699FF" ><span style="font-family:DFKai-sb;">{{loginmes}}</span></label>
+</div>
+	<form method="post" >{% csrf_token %}
+
+	<table align="center">
+	<tr>
+	<td style="height:20px;width:80%;"><span style="width: 50px;font-family:DFKai-sb;font-size: 20px;">登入帳號:</span>
+	<input align="center" name="username" type="text" style="width: 130px;font-size: 20px;" /></td>
+	<td rowspan="2"><input style="width:80px;height:50px;font-family:DFKai-sb;font-size:20px;" name="submit1" type="submit" value="登 入"/></td>
+	</tr>
+	<td style="height:20px;width:70%;"><span style="width: 50px;font-family:DFKai-sb;font-size: 20px;">登入密碼:</span>
+	<input  align="center" name="passw" type="password" style="width: 130px;font-size: 20px;" /></td>
+	</table>
+	<p>
+	
+	</p>
+		
+	</form>
+
+	
+</div>
+
+</h3>   
+</body>
+</html>

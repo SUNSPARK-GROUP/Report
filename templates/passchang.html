@@ -1,0 +1,120 @@
+﻿
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>修改密碼</title>
+
+
+</head>
+
+<body>
+<script type="text/javascript">  
+//document.getElementById('Label1').innerHTML = ''
+    function closewindow(){  
+           var ts1= document.getElementsByName("Text1");
+           var t1=ts1[0].value;
+           var ts2= document.getElementsByName("Text2");
+           var t2=ts2[0].value;
+           var nso= document.getElementById("Label1")
+           var no=nso.innerHTML;
+           if (t1!=t2) {
+             alert('二次輸入不同');
+           }           
+           else {
+           window.location.href='passchang?uno='+no+'&ty='+t1;
+           //
+           }; 
+        }
+      function wc(){
+        var mso= document.getElementById("Label2")
+        var mo=mso.innerHTML;
+        if (mo=='YES'){ window.close()}
+        } 
+  window.onload = wc; 
+ </script> 
+<style type="text/css">
+#div1{
+/*background-image:url('/image/SGROUP1.jpg');*/
+	background-repeat:no-repeat;
+    width:500px;
+	height:50px;
+	
+	}
+#sel1{
+	float:left;
+	
+}
+.showdata{width:500px;border:2px solid blue;vertical-align: middle;border-collapse: collapse;} /*border-collapse: collapse;框線重疊*/
+.showdata th{border:1px solid blue;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 16px;
+} 
+}	
+
+#tabs-nav{
+   margin: 0;
+   padding: 0;
+   position: relative;
+   text-align: left
+}
+a.tabs-menu {
+   display: inline-block;
+   background-color: #1b91ab;
+   font-size: 12px;
+   font-family: Arial,Helvetica,sans-serif;
+   color: #fff;
+   padding: 5px 10px;
+   text-shadow: 1px 1px 0px #1b91ab;
+   font-weight: bold;
+   text-decoration: none;
+   border: solid 1px #1b91ab;
+   border-bottom: 0;
+   border-radius: 3px 3px 0 0;
+}
+a.tabs-menu.tabs-menu-active {
+   background-color: #fff;
+   text-shadow: 1px 1px 0px #ffffff;
+   border: solid 1px #1b91ab;
+   color: #6b6b6b;
+   border-bottom: 0;
+}
+.tabs-container {
+   border: solid 1px #1b91ab;
+   margin-top: -1px;
+   background-color: #FFFFBB;
+   overflow: hidden;
+   max-height: 600px;
+}
+.tabs-panel {
+   display: none;
+   min-height: 100px;
+   overflow: auto;
+   padding: 10px;
+   max-height: 300px;
+}
+.auto-style1 {
+	font-size: medium;
+	font-weight: bold;
+}
+</style>
+<form id="saleitem">
+<!--section style="float:left; width:520px; height:500px; "-->    
+
+ 
+<div class="tabs-container">
+      工號:<label id="Label1" >{{uno}}</label><br><br>
+	新密碼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Text1" style="width: 193px" type="text"><br><br>
+         再輸入一次&nbsp;<input name="Text2" style="width: 193px" type="text"><br><br>
+   <input name="Button1" type="button" value="確   定" onclick="closewindow()" class="auto-style1" style="width: 87px; height: 36px">
+         
+ <label id="Label2" >{{MSG}}</label></div>
+<strong>
+</strong>
+</form>
+</body>
+</html>

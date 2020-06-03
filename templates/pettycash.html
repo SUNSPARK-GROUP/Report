@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>pettycash</title>
+</head>
+<body>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script>
+$(function(){
+    var searchURL = window.location.search;
+    searchURL = searchURL.substring(1, searchURL.length);
+    var targetPageId = searchURL.split("&")[2].split("=")[1];
+	var lourl = location.search;
+    $("#aNo").find("option[value = '"+targetPageId+"']").attr("selected","selected");
+})
+$(function(){
+    var searchURL = window.location.search;
+    searchURL = searchURL.substring(1, searchURL.length);
+    var targetPageId = searchURL.split("&")[3].split("=")[1];
+	var lourl = location.search;
+	var re = /%2F/gi;
+	var newstr = targetPageId.replace(re, '/');
+    $("#gday").find("option[value = '"+newstr+"']").attr("selected","selected");
+})
+$(document).ready(function(){
+  $("f1").click(function(){
+    alert("The paragraph was clicked.");
+  });
+});
+</script>
+<style>
+#f1{
+	cursor: pointer;
+}
+#div1{
+	width:1350px;
+}
+.showdata{width:520px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0000AA;
+}
+#sform{
+	width:61%;
+	float:right;
+}
+section{
+	width:500px;
+}
+#EIPform{
+	width: 60%;
+}
+#dc{
+	width:auto;
+	height:20px;
+	border:0px none;
+	background: #FFCCFF;
+	font: normal normal bold 100% serif;
+	outline:none;
+}
+#dc:hover{
+	cursor:pointer;
+	color:#00BBFF;
+}
+@media screen and (max-width:1366px){
+#div1{
+	width:1100px;
+}
+.showdata{width:550px;border:1px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 17px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 17px;
+	color: #0000AA;
+}
+#sform{
+	width:50%;
+	float:right;
+}
+section{
+	width:450px;
+}
+#EIPform{
+	width:100%;
+}
+}
+</style>
+<header>
+  <form id="form1"  runat="server"  method="get"  >
+<script>
+function myMsg(myObj){
+	var dcs= "paylist?eipid="+myObj.value;
+    var obj = document.getElementById('EIPform');
+    obj.setAttribute("src",dcs);
+}
+function setsrc(ms) { 
+           obj.setAttribute("src",ms);
+           }
+var aa = function(){
+   	var label=document.getElementById("msl1");
+	var t=setTimeout("window.location.reload()",0);
+	label.innerText="JDE轉入中，稍後將會重整";
+};
+function star(e){
+  var ed = document.getElementById("edate").value
+  var dcs = "?sdate="+e.target.value+"&edate="+ed
+  location.href=dcs
+}
+function end(e){
+  var sd = document.getElementById("sdate").value
+  var dcs = "?sdate="+sd+"&edate="+e.target.value
+  location.href=dcs
+}
+function DispayPrice()
+    {
+        var ed = document.getElementById("edate").value
+		var sd = document.getElementById("sdate").value
+		var nSel = document.getElementById("aNo");
+        var index = nSel.selectedIndex; // 选中索引
+        var text = nSel.options[index].text; // 选中文本
+		var value= nSel.options[index].value;
+ 		var dcs = "?sdate="+sd+"&edate="+ed+"&aNo="+value
+		location.href=dcs
+    }
+function f1(){
+	for(i=0; i<form.f1.length;i++){
+	if(form.f1[i].click){
+		var dcs= "paylist?eipid="+table.rows[i+1].cells[1].innerText;
+          var obj = document.getElementById('EIPform');
+          obj.setAttribute("src",dcs);
+           break;
+		}
+	}
+}
+function check_all(obj,cName)
+{
+    var checkboxs = document.getElementsByName(cName);
+    for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;}
+}
+</script>
+<div style="height: 30px;">
+<label>
+      <input type="date" id="sdate" name="sdate" value="{{Sday}}" >
+</label>
+<label>至:
+      <input type="date" id="edate" name="edate" value="{{Eday}}" >
+</label>
+<label>
+    <input type="submit" id="submit0" name="submit0" style="font-size:14px;color:#0000AA" value="確認" >
+</label>
+</div>
+<div style="height: 30px;">
+<select name="aNo" id="aNo" onchange="DispayPrice();">
+  <option selected>請選擇</option>
+	{% for a in aNo%}
+	<option value="{{a}}">{{a}}</option>
+    {% endfor %}
+</select>
+<select name="gday" id="gday">
+  <option selected>請選擇</option>
+  
+  
+	{% for a in gday%}
+	<option value="{{a}}">{{a}}</option>
+    {% endfor %}
+</select>
+
+</div>
+    <div style="height: 30px;">
+      <button type="Submit" id="Submit1" name="Submit1" value="查詢" style="font-size:16px;color:#0000AA">EIP查詢</button>
+      
+      <label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+      
+    </div>
+  </form>
+</header>
+<div id="div1">
+<form id="takeitem" method="post">
+  <section style="float:left;height:533px; ">
+    <button type="Submit" id="Submit1" name="Submit1" value="轉入" style="font-size:16px;color:#0000AA" onclick="check(this.form)">EIP轉入</button>
+    <table id="eipdata"  class="showdata">
+      <caption>
+      {{reportmes|safe}}
+      </caption>
+      <tr>
+        <th align="center"><input type="checkbox" name="all" onclick="check_all(this,'eipid')" /></th>
+        <th>EIP</th>
+        <th>申請人</th>
+      </tr>
+      {% for r in payform%}
+      <tr>
+        <td align="center"><input name="eipid" type="checkbox" value="{{r.0}}"></td>
+		<td align="center"><input name="dc" type="button" id="dc" onclick="myMsg(this)" value="{{r.0}}"></td>
+        <td>{{r.1}}</td>
+	  </tr>
+      {% endfor %}
+    </table>
+  </section>
+  <div id="sform" style="">
+    <IFRAME id="EIPform" style="height:500px; border:none"></IFRAME>
+  </div>
+</form>
+</div>
+</body>
+<body>
+</body>
+</html>

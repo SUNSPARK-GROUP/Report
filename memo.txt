@@ -1,0 +1,68 @@
+python manage.py runserver 8800
+
+0.python manage.py migrate 根據 INSTALLED_APPS 設定與你的 settings.py 設定，建立所有必備的資料表。
+
+1.在主目錄中新增個 templates 存放網頁樣板。
+2.在setting.py 中 TEMPLATES=[... 'DIR':[]...改成'DIR':[BASE_DIR+"/templates",] 以指向templates目錄。
+3.在原 project 目錄下同樣名稱的目錄下建個first.py，內容如下:
+  from django.shortcuts import render 
+  def admin(request): 
+    return render(request, 'test.aspx', )
+  這裡我們使用了 "模板" render 引導至'test.aspx'
+4.靜態圖檔設置:a-> settings.py 內新增2行
+                   MEDIA_URL = '/image/'
+                   MEDIA_ROOT = os.path.join(BASE_DIR, 'image').replace("\\", "/")
+               b-> urls.py :
+                   from django.conf import settings
+                   urlpatterns = [....]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+               c-> 網頁:
+                   &nbsp;<p><img height="720" src="/image/ADSL.png" width="931"></p>
+*pip install django-graphos
+5.connect mssql:pip install
+                a.django-mssql
+                b.django-sqlserver
+                c.pyodbc
+                d.django-pyodbc
+                e.pypiwin32(直接安裝時發生 permissionerror 改下 pip install --user pypiwin32 成功) 
+                                   
+                f.修改 project 下的setting.py DATABASES = {
+                                                            'default': {
+                                                            #    'ENGINE': 'django.db.backends.sqlite3',
+                                                            #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	                                                    'ENGINE': 'django.db.backends.sqlserver',
+                                                            'NAME':'erps',
+                                                            'HOST':'192.168.0.214,1433',
+                                                            'USER':'apuser',
+                                                            'PASSWORD':'0920799339',
+	                                                    'OPTIONS': {
+                                                            'host_is_server': True ,
+                                                            'DRIVER': 'SQL Server Native Client 10.0',
+                                                             },
+	                                                                }
+                                                            }
+               a.-f.為Django 1.8以下版本
+               e.Django 2 需要用django-pyodbc-azure，install後 setting.py如下
+                 DATABASES = {
+                              'default': { 	
+                                          'ENGINE': 'django.db.backends.sqlite3',
+                                          'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+				},	
+	                      'mssql': {
+	                                  'ENGINE': 'sql_server.pyodbc',
+                                          'NAME':'erps',
+                                          'HOST':'192.168.0.214',
+                                          'USER':'apuser',
+                                          'PASSWORD':'0920799339',
+				          'PORT': '1433',
+	                                  'OPTIONS':{
+                                          'driver': 'ODBC Driver 11 for SQL Server',
+                                            },
+	                               }	
+                              }
+               g.在 project 下執行 python manage.py startapp siteapp 建立app資料(把C:\ProgramData\Anaconda3\Lib\site-packages
+                  \sqlserver_ado\schema.py 的  from django.utils.text import force_text mark起來 )
+               h.到 project 下的setting.py 的 INSTALLED_APPS = [ ..., 'siteapp',] (把上一步建立起的 siteapp 加入)
+               i.cmd中進到project資料夾下，輸入 python manage.py inspectdb --database=mssql > siteapp/models.py
+                 把database中的table schema 建立在models.py中，就不用手動建立。
+
+

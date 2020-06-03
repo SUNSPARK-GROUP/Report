@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>weborderdetel</title>
+
+
+</head>
+
+<body  bgcolor="#B0E0E6" style="width: 530px; height: 25px; margin-right: 47px;" onload="jsTabs(event,'tab1');return false">
+<style type="text/css">
+#div1{
+/*background-image:url('/image/SGROUP1.jpg');*/
+	background-repeat:no-repeat;
+    width:500px;
+	height:50px;
+	
+	}
+#sel1{
+	float:left;
+	
+}
+.showdata{width:500px;border:2px solid blue;vertical-align: middle;border-collapse: collapse;} /*border-collapse: collapse;框線重疊*/
+.showdata th{border:1px solid blue;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 16px;
+} 
+}	
+
+#tabs-nav{
+   margin: 0;
+   padding: 0;
+   position: relative;
+   text-align: left
+}
+a.tabs-menu {
+   display: inline-block;
+   background-color: #1b91ab;
+   font-size: 12px;
+   font-family: Arial,Helvetica,sans-serif;
+   color: #fff;
+   padding: 5px 10px;
+   text-shadow: 1px 1px 0px #1b91ab;
+   font-weight: bold;
+   text-decoration: none;
+   border: solid 1px #1b91ab;
+   border-bottom: 0;
+   border-radius: 3px 3px 0 0;
+}
+a.tabs-menu.tabs-menu-active {
+   background-color: #fff;
+   text-shadow: 1px 1px 0px #ffffff;
+   border: solid 1px #1b91ab;
+   color: #6b6b6b;
+   border-bottom: 0;
+}
+.tabs-container {
+   border: solid 1px #1b91ab;
+   margin-top: -1px;
+   background-color: #FFFFBB;
+   overflow: hidden;
+}
+.tabs-panel {
+   display: none;
+   min-height: 100px;
+   overflow: auto;
+   padding: 10px;
+   max-height: 300px;
+}
+.auto-style1 {
+	margin-right: 0px;
+}
+</style>
+<form id="form1"  runat="server"  method="get" class="auto-style1"  >
+<script src="jquery-tablepage-1.0.js"></script>
+<script >
+$(function(){
+    var $li = $('ul.tab-title li');
+        $($li. eq(0) .addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+    
+        $li.click(function(){
+            $($(this).find('a'). attr ('href')).show().siblings ('.tab-inner').hide();
+            $(this).addClass('active'). siblings ('.active').removeClass('active');
+        });
+    });
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+function ShowDialog(url,s) {
+  if (s==1) {
+   var tests=window.open(url,"Detail","height=500,width=650,left=150,top=50");}
+  else {var tests=window.open(url,"Detail","height=300,width=550,left=150,top=50"); } }
+
+  function setdate() { 
+           var obj = document.getElementById('ISdate');   
+               
+           return location.href='contsdetel?cno={{cno}}&Sday='+obj.value;           
+           }
+
+ function jsTabs(evt, tabId) {
+    var tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabs-panel");
+    for (var i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+     }
+     tablinks = document.getElementsByClassName("tabs-menu");
+     for (var i = 0; i < tablinks.length; i++) {
+       tablinks[i].className = tablinks[i].className.replace(" tabs-menu-active", "");
+     }
+     var tab = document.getElementById(tabId);
+         tab.style.display = "block";
+     evt.currentTarget.className += " tabs-menu-active";
+     return false;
+ }
+           
+           
+</script >
+
+
+<header>
+<div id="div1" style="height: 30px; width: 600px;"  >
+<p >
+    <label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >合約日期:</label>
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px; height: 20px; width: 160px;"  value={{Sday}}>	
+<input name="edit" type="button" style="font-size:16px;color:#0000AA" value="修改到期日" onclick="setdate()">
+	<!--label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">路線:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cdriver}}</label-->
+<input name="edit0" type="button" style="font-size:16px;color:#0000AA" value="檔案上傳" onclick="ShowDialog('upload.html?eno={{ceno}}&ctno={{ctno}}',0)">
+<!--input name="edit0" type="button" style="font-size:16px;color:#0000AA" value="檔案傳輸" onclick="href='ftp://chris:chrisk123@192.168.0.214/type{{ctno}}/{{ceno}}'"-->
+<!--input name="edit0" type="button" style="font-size:16px;color:#0000AA" value="檔案傳輸" onclick="ShowDialog('ftp://chris:chrisk123@192.168.0.214/type{{ctno}}/{{ceno}}')"-->
+
+	<input name="fdownload" type="button" style="font-size:16px;color:#0000AA" value="下載檔案" onclick="ShowDialog('ftp://chris:chrisk123@192.168.0.214/type{{ctno}}/{{ceno}}',1)"></p>
+	</div>
+
+</header>
+</form>
+<div style="clear:left"><!--input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()"-->
+
+<!--{% load static %}a href="static/saledetel{{doco}}.docx" download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+<!--a href={% static "saledetel{{doco}}.docx" %} download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+<!--a href="MEDIA/saledetel{{doco}}.docx" download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+  
+<div id="js-tabs" style="width:auto">
+
+ <div class="tabs-container">
+	 <form method="post">
+		 <textarea name="TextArea1" style="width: 520px; height: 364px;">{{contd}}</textarea></form>
+</div>
+<section class="sel1" >
+</section>
+</div>
+</div>
+<article >
+</article>
+</body>
+</html>

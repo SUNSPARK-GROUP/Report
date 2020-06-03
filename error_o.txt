@@ -1,0 +1,4 @@
+select F01.aban8, F01.abalky,F01.abalph,F16.ALADD1, replace(f15.wpar1,' ')||'-'||replace(f15.wpph1,' '),f11.wwalph,F01.ABTX2 from f0101 F01,F0116 F16,f0115 f15,f0111 f11  WHERE f16.alan8=f01.aban8 and f01.aban8='9000000' and f15.wpan8=f01.aban8 and f15.WPphtp='TEL' and f11.wwalph like replace(abac30,' ')||'-%'
+[['1', '³z©ú·L¯º¤f¸n(2¥N)-²LÂÅ                 ', '³ÍªLÅKªO¿N101©±                     ', '24', 'EA', '100', '2400']]
+{}
+{'cctel': '', 'doco': '19000384'}

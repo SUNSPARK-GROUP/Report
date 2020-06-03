@@ -1,0 +1,107 @@
+﻿<style> 
+.shopdata{width:150px;border:2px solid blue;} 
+.shopdata th{border:1px solid blue;vertical-align: middle;}
+.shopdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 12px;
+} 
+</style> 
+<!DOCTYPE html>
+<html >
+<head>
+<!--meta  content="zh-tw" -->
+<!--meta  content="text/html; charset=utf-8" -->
+<meta name="viewport" content="width=device-width">
+<!--script src="/Scripts/jquery-1.4.1.js" type="text/javascript"></script>
+<script src="/Scripts/highcharts.js" type="text/javascript"></script>
+<script type="text/javascript"></script-->
+<link rel="stylesheet" type="text/css" href="pccss" media="screen">
+<link rel="stylesheet" type="text/css" href="tablecss" media="screen and (min-width:600px) and (max-width:979px)">
+<link rel="stylesheet" type="text/css" href="spcss" media="screen and (max-width:320px)"><title>門市日營業</title>
+<style type="text/css">
+.auto-style1 {
+	border-style: solid;
+	border-width: 3px;
+}</style>
+</head>
+<body>
+<div id="container">
+<form id="form1"  runat="server"  method="get"  >
+<header>
+	<p style="width: 800px; height: 30px;"><br><label  style="font-weight:bold;">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp; &nbsp;
+	<input id="date" type="date" name="date" style="font-size:14px"  value={{nowday}}>&nbsp;	
+	</p>
+<table style=" height: 60px; width: 800px"  >
+<tr><td style="width: 50px" >
+	<input type="image" height="50" src="/MEDIA/Tinos.jpg" width="100" Onclick="document.getElementById('shoptext').value='TINOS'" class="auto-style1" /></td>
+	<td style="width: 70px" >
+	<input type="image" height="50" src="/MEDIA/VASA.jpg" width="100" Onclick="document.getElementById('shoptext').value='VASA'"  class="auto-style1" /></td>
+	<td style="width: 70px" >
+	<input type="image" height="50" src="/MEDIA/Laya.jpg" width="100" Onclick="document.getElementById('shoptext').value='LAYA'"  class="auto-style1" /></td>
+	<td style="width: 70px" >
+	<input type="image" height="50" src="/MEDIA/Fani.jpg" width="100" Onclick="document.getElementById('shoptext').value='FANI'"  class="auto-style1" /></td>
+	<td style="width: 70px" >
+	<input type="image" height="50" src="/MEDIA/SelFish.jpg" width="100"  Onclick="document.getElementById('shoptext').value='SelFish'" class="auto-style1" />
+	</td>
+</table>
+</header>
+
+<table style="width: 800px; float: none; clear: inherit;">
+<tr>
+<td style="width: 150px" >
+<!--div id="saledata" style="width: 200px; height: 150px;"-->
+
+<table class="shopdata"  >
+            <tr>
+                <th>店名</th>
+                <th>業績</th>
+            </tr>
+            {% for r in ttl%}
+                <tr>{% for l in r %}
+                    <td> {{l}} </td> 
+                   {% endfor %}                   
+                </tr>
+            {% endfor %}
+        </table>
+	<input id="shoptext" name="SHOP" type="text" size="20" visible="true" style="width: 52px">
+<!---/div-->
+<td>
+<article>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+ google.load("visualization","1", {packages:["corechart"]});
+</script>
+
+<div id="twdyAwGqoA" style="width: 600px; height: 300px;"></div>
+<script type="text/javascript">
+  google.setOnLoadCallback(drawCharttwdyAwGqoA);  
+  function drawCharttwdyAwGqoA() {
+    var data = google.visualization.arrayToDataTable({{gchart|safe}});   
+      var options = {"title":{{shop|safe}}}  
+
+    
+  var chart = new google.visualization.ColumnChart(document.getElementById('twdyAwGqoA'));
+
+    chart.draw(data, options);
+    charttwdyAwGqoA = chart;
+  }
+  
+</script>
+</article>
+</td>
+</tr>        
+</table>
+
+
+</form>
+</div>
+</body>
+
+
+
+
+
+</html>

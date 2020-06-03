@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>paylist</title>
+</head>
+<body  bgcolor="#B0E0E6">
+<style type="text/css">
+#div1{
+	background-repeat:no-repeat;
+    width:580px;
+	height:50px;
+	}
+#sel1{
+	float:left;	
+}
+.showdata{width:600px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 16px;
+} 
+label {
+	font-size: 16px;
+}
+button{
+	font-size:14px;
+}
+/*寬度小於1024會調整成以下大小*/
+@media screen and (max-width: 1024px){
+.showdata{width:480px;border:1px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 17px;
+} 
+label {
+	font-size: 17px;
+}
+button{
+	font-size:15px;
+}
+}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script> 
+<script>
+function setsrc(eipno) { 
+           obj.setAttribute("src",dcs);
+           }
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+	var searchURL = window.location.search;
+    searchURL = searchURL.substring(1, searchURL.length);
+    var targetPageId = searchURL.split("&")[2].split("=")[1];
+	var lourl = location.search;
+	
+	if (targetPageId == '%E8%BD%89%E5%85%A5JDE') {
+		parent.aa()
+		}
+</script>
+<header>
+  <form id="form1"  runat="server"  method="get">
+    <div id="div1" style="height: 120px; width:450px;">
+      <div>
+      	<label id="" style="font-weight: bolder; color: #0000AA">申請日期:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000" >{{date}}</label>
+        <label id="" style="font-weight: bolder; color: #0000AA"> 申請人:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000">{{name}}</label>
+      </div>
+      <div>
+        <label id="" style="font-weight: bolder; color: #0000AA"> 付款方式:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000">{{paymethod}}</label>
+        <label id="" style="font-weight: bolder; color: #0000AA"> 付款日期:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000">{{payday}}</label>
+      </div>
+      <div>
+        <label id="" style="font-weight: bolder; color: #0000AA">戶名:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000" >{{bank}}</label>
+      </div>
+      <div>
+        <label id="" style="font-weight: bolder; color: #0000AA">總金額:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000" >{{tpay}}</label>
+        <label id="" style="font-weight: bolder; color: #0000AA"> 是否扣款:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000">{{chargefee}}</label>
+      </div>
+      <div>
+      	<label id="" style="font-weight: bolder; color: #0000AA">匯款銀行:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000">{{bankname}}</label>
+        <label id="" style="font-weight: bolder; color: #0000AA">帳號:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000">{{bankacc}}</label>
+      </div>
+      <div>
+        <label id="" style="font-weight: bolder; color: #0000AA" > 總帳日期:</label>
+        <label id="" style="font-weight: bolder; color: #CC0000" >{{fpayday}}</label>
+      </div>
+      <div style="display:none">
+        <input name="eid" type="text" value = "{{eid}}">
+        <input name="vs" type="text" value = "{{vs}}">
+      </div>
+    </div>
+  </form>
+</header>
+<div>
+  <table id="schdata"  class="showdata">
+    <tr>
+      <th>部門</th>
+      <th>項目</th>
+      <th>申請原因</th>
+      <th>未稅金額</th>
+      <th>稅金</th>
+      <th>金額</th>
+      <th>發票</th>
+    </tr>
+    {% for r in show%}
+    <tr> {% for l in r %}
+      <td > {{l}} </td>
+      {% endfor %} </tr>
+    {% endfor %}
+  </table>
+</div>
+</body>
+</html>

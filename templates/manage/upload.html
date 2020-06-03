@@ -1,0 +1,125 @@
+﻿
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>upload</title>
+
+
+</head>
+
+<body>
+<script type="text/javascript">  
+     function ShowDialog(url) {
+         var tests=window.open(url,"Detail","height=500,width=650,left=150,top=50"); }
+  
+}
+       function upfload(){  
+            var selectedFile = document.getElementById('input').files[0];  
+            //window.opener.document.getElementById("com1").value  =document.getElementById('comno').value;
+            //window.close(); 
+            return location.href='upload?eno={{eno}}&fname='+selectedFile;
+           //window.close(); 
+        }  
+    </script> 
+<style type="text/css">
+#div1{
+/*background-image:url('/image/SGROUP1.jpg');*/
+	background-repeat:no-repeat;
+    width:500px;
+	height:50px;
+	
+	}
+#sel1{
+	float:left;
+	
+}
+.showdata{width:500px;border:2px solid blue;vertical-align: middle;border-collapse: collapse;} /*border-collapse: collapse;框線重疊*/
+.showdata th{border:1px solid blue;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 16px;
+} 
+}	
+
+#tabs-nav{
+   margin: 0;
+   padding: 0;
+   position: relative;
+   text-align: left
+}
+a.tabs-menu {
+   display: inline-block;
+   background-color: #1b91ab;
+   font-size: 12px;
+   font-family: Arial,Helvetica,sans-serif;
+   color: #fff;
+   padding: 5px 10px;
+   text-shadow: 1px 1px 0px #1b91ab;
+   font-weight: bold;
+   text-decoration: none;
+   border: solid 1px #1b91ab;
+   border-bottom: 0;
+   border-radius: 3px 3px 0 0;
+}
+a.tabs-menu.tabs-menu-active {
+   background-color: #fff;
+   text-shadow: 1px 1px 0px #ffffff;
+   border: solid 1px #1b91ab;
+   color: #6b6b6b;
+   border-bottom: 0;
+}
+.tabs-container {
+   border: solid 1px #1b91ab;
+   margin-top: -1px;
+   background-color: #FFFFBB;
+   overflow: hidden;
+   max-height: 600px;
+}
+.tabs-panel {
+   display: none;
+   min-height: 100px;
+   overflow: auto;
+   padding: 10px;
+   max-height: 300px;
+}
+</style>
+<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >檔案上傳:</label><br>
+<form id="saleitem" enctype="multipart/form-data"  method="post" style="height: 66px" >
+<!--section style="float:left; width:520px; height:500px; "  action="/foo/"-->    
+
+ 
+ <div class="tabs-container">
+<input type="file" id="input" name="uf" >	 <!--onchange="handleFiles(this.file)"-->
+	 
+   
+</div>
+
+<strong>
+
+</strong>
+	<input name="Submit1" type="submit" value="上傳檔案">
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >{{fmess}}</label>
+</form>
+<form>
+<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >合約檔案表{{eno}}{{ctno}}</label>
+	<textarea name="TextArea1" style="width: 459px; height: 114px">{{flist}}</textarea><br>
+	<!--label id="" style="font-size: 16px; font-weight: bolder; color: #BB00AA" >選擇檔案下載</label><br>
+	<select name="Select1" id="sel" style="width: 468px">
+	{% for a in ftxt%}
+        {% if a == ftxt1%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+
+	<option></option>
+	</select--><br>
+	
+</form>
+</body>
+</html>

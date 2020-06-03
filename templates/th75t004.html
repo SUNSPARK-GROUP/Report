@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>F75T004</title>
+</head>
+<body>
+<style> 
+.showdata{width:150px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 12px;
+} 
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<p style="width: 800px; height: 50px;"><br><label  style="font-weight:bold;font-size:16px;color:#0099FF">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp; &nbsp;
+	<input id="date" type="date" name="schdate" style="font-size:14px"  value={{nowday}}>&nbsp;	
+<input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="確     定">
+
+<label id="Label1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+
+</form>
+</header>
+<table  class="showdata">
+<tr>
+                <th>NO</th>
+                <th>日期</th>
+                <th>THATXA</th>
+                <th>THSTAM</th>
+                <th>THAAP</th>
+                <th>THT75ATXA</th>
+                <th>THT75STAM</th>
+                <th>THT75AAP</th>
+            </tr>
+            {% for r in TH75%}
+                <tr>{% for l in r %}
+                    <td> {{l}} </td> 
+                   {% endfor %}                   
+                </tr>
+            {% endfor %}
+
+</table>
+</body>
+
+</html>

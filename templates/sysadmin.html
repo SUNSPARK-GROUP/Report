@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>admin</title>
+</head>
+<body  bgcolor="#B0E0E6">
+<style type="text/css">
+#div1{
+background-image:url('/MEDIA/SGROUP1.jpg');
+	background-repeat:no-repeat;
+    width:500px;
+	height:50px;
+	}
+#sel1{
+	float:left;
+	
+}/*
+#menu-wrapper .main-menu , #menu-wrapper .sub-menu {
+	margin: 0 auto;
+	width: 980px;
+	color: #6699FF;
+
+}*/
+#menu-wrapper ul, #menu-wrapper ul li {
+	margin:0;
+	padding:inherit;
+	list-style: none;
+}
+.main-menu ul li  {/*   */
+	float: left;
+	color: #220088;
+	background-color:bisque;
+	border-bottom-style:double;
+	font-size: 13px;
+	cursor: pointer; 
+}
+.sub-menu ul li  {/*   */
+	float: left;
+	color: #220088;
+	background-color:#FFEE99;
+	border-bottom-style:double;
+	font-size: 13px;
+}
+
+.main-menu ul li a ,.sub-menu ul li a {
+	color: #220088;
+	display: block;
+	margin-right: 20px;/* 右邊界 */
+	padding: 5px 5px 5px 0; /*留白 */
+	text-decoration: none;
+}
+#subform{
+height:580px;	
+}
+
+</style>
+<script>
+function ShowDialog(url) {
+var tests=window.open(url,"Detail","height=200,width=450,left=250,top=50"); }
+
+  function setsrc(ms) { 
+           var obj = document.getElementById('subform');
+           //obj.setAttribute("src",'');
+           obj.setAttribute("src",ms);
+           //obj.outerHTML='<IFRAME id="subform" src="http://127.0.0.1:8800/'+ms+'" width="250 px"></IFRAME>';
+           }
+</script>
+<header>
+<div id="div1">
+	<label id="Labno" style="font-size: 25px; font-weight: bolder; color: #6699FF" >
+	使用者:{{uno}}</label>
+	<!--label id="Labname" style="font-size: 25px; font-weight: bolder; color: #6699FF">{{uname}}</label-->
+</div>
+<div >
+			<div class="main-menu">
+				<ul>
+				{% for m in menum%}
+                   <li ><a href="?mmenu={{m.mid}}&crm={{m.mname}}"><span>{{m.mname}}</span></a></li>                  					
+				{% endfor %}				
+				<li ><a onclick="ShowDialog('passchang?uno={{uno}}&ty=BEGINCHANGPS')"><span>修改密碼</span></a></li>
+				<li ><a href="admincheck"><span>登出</span></a></li>
+				
+				</ul>
+			</div>
+</div>
+
+</header>
+<div style="clear:left">
+<section class="sel1">
+<div class="sub-menu"> 
+<table  ><tr><!--td>	
+	<label id="mnname">{{crm}}</label>	
+</td><tr-->
+<td>
+<ul>
+				{% for sb in menus%}
+                   <li onclick="setsrc('{{sb.url}}')" style="cursor:pointer"><a><span>{{sb.sname}}</span></a></li>                   
+                   {% endfor %}						
+					
+				</ul>
+
+</td>
+</tr>
+</table>
+</div>
+</section>
+
+</div>
+<article>
+<div>
+<IFRAME id="subform" src="" style=" width:100%; border:none"></IFRAME>
+
+</div>
+</article>
+</body>
+</html>

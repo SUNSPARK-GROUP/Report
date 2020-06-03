@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>worklog</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<style>
+.showdata{width:600px;border:2px solid blue;border-collapse: collapse;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+}
+.showdata td:nth-child(2) {
+    display: none;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0000AA;
+}
+#tabs-nav{
+   margin: 0;
+   padding: 0;
+   position: relative;
+   text-align: left
+}
+a.tabs-menu {
+   display: inline-block;
+   background-color: #1b91ab;
+   font-size: 12px;
+   font-family: Arial,Helvetica,sans-serif;
+   color: #fff;
+   padding: 5px 10px;
+   text-shadow: 1px 1px 0px #1b91ab;
+   font-weight: bold;
+   text-decoration: none;
+   border: solid 1px #1b91ab;
+   border-bottom: 0;
+   border-radius: 3px 3px 0 0;
+}
+a.tabs-menu.tabs-menu-active {
+   background-color: #fff;
+   text-shadow: 1px 1px 0px #ffffff;
+   border: solid 1px #1b91ab;
+   color: #6b6b6b;
+   border-bottom: 0;
+}
+.tabs-container {
+   border: solid 1px #1b91ab;
+   margin-top: -1px;
+   background-color: #BBFFEE;
+   overflow: hidden;
+}
+.tabs-panel {
+   display: none;
+   min-height: 250px;
+   overflow: auto;
+   padding: 10px;
+   max-height: 400px;
+}
+#test tr td:nth-child(3n+3) {
+    display: none;
+}
+#div1{
+	width:1190px;
+}
+.section{
+	width:630px;
+}
+#box1{
+	width:40px;
+}
+#box2{
+	width:80px;
+}
+#box3{
+	width:70px;
+}
+#box4{
+	width:70px;
+}
+#box5{
+	width:200px;
+}
+#box6{
+	width:60px;
+}
+#box7{
+	width:60px;
+}
+#saleitemform{
+
+}
+@media screen and (max-width:1366px){
+#div1{
+	width:1120px;
+}
+.showdata{width:530px;border:2px solid blue;border-collapse: collapse;}
+.section{
+	width:500px;
+}
+#box4{
+	width:70px;
+}
+#box5{
+	width:150px;
+}
+}
+</style>
+<script>
+$(document).ready(function(){
+	if($("#mstatus").val()==""){
+		$('#status option[value=請選擇]').attr('selected', 'selected');
+	}else if($("#mstatus").val()=="進行中"){
+		$('#status option[value=進行中]').attr('selected', 'selected');
+	}else if($("#mstatus").val()=="已完成"){
+		$('#status option[value=已完成]').attr('selected', 'selected');
+	}
+})
+</script>
+</head>
+<body onload="jsTabs(event,'tab1');return false">
+<form id="form1"  runat="server"  method="get">
+<script>
+function tck(sd){
+var form = document.getElementById("saleitem");
+var table = document.getElementById("schdata"+sd);
+var dc = document.getElementsByName("dc"+sd);
+
+if (String(dc.length)=='undefined'){
+var dcs= "logcheck?logno="+table.rows[1].cells[0].innerText;
+       var obj = document.getElementById('saleitemform');
+       obj.setAttribute("src",dcs);
+ }
+else{
+    for(var i=0; i<dc.length;i++){
+        if(dc[i].checked){
+          var dcs= "logcheck?logno="+table.rows[i+1].cells[1].innerText;
+          var obj = document.getElementById('saleitemform');
+          obj.setAttribute("src",dcs);
+                    //alert(dcs);
+           break;
+           }
+    }
+   } 
+   
+}           
+        
+function jsTabs(evt, tabId) {
+    var tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabs-panel");
+    for (var i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+     }
+     tablinks = document.getElementsByClassName("tabs-menu");
+     for (var i = 0; i < tablinks.length; i++) {
+       tablinks[i].className = tablinks[i].className.replace(" tabs-menu-active", "");
+     }
+     var tab = document.getElementById(tabId);
+         tab.style.display = "block";
+     evt.currentTarget.className += " tabs-menu-active";
+     return false;
+ }
+var aa = function(){
+	var t=setTimeout("window.location.reload()",0);
+	}
+</script>
+    <p style="width:1000px; height: 10px;">
+    <div>
+      <label class="auto-style1">部門：
+        <input name="Department" type="text" value="{{sDepartment}}" style="font-size:16px; width: 128px;">
+      </label>
+      <label class="auto-style1">問題發起人：
+        <input name="Sponsor" type="text" value="{{sSponsor}}" style="font-size:16px; width: 128px;">
+      </label>
+      <label class="auto-style1">負責人：
+        <input name="Person" type="text" value="{{sPerson}}" style="font-size:16px; width: 128px;">
+      </label>
+      <label class="auto-style1">關鍵字：
+        <input name="Subject" type="text" value="{{sSubject}}" style="font-size:16px; width: 128px;">
+      </label>
+    </div>
+    <p>
+    <div>
+      <input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>
+      &nbsp;
+      <label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至 </label>
+      <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>
+      <select name="status" id="status" style="font-size:18px; width: 128px;">
+      <option value="" selected>全部狀態</option>
+      <option value="進行中">進行中</option>
+      <option value="已完成">已完成</option>
+    </select>
+    <div style="display:none">
+    <input type="text" name="mstatus" id="mstatus" value="{{mstatus}}">
+    </div>
+      &nbsp;
+      <button type="button" id="1" name="1" style="font-size:16px;color:#0000AA" onClick="document.getElementById('saleitemform').src='logcheck.html'">新增</button>
+      <input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="查詢" >
+      <label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+{% if CK1 == 'on' %}
+<input  name="Checkbox1" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox1" type="checkbox">
+{% endif %}
+      <label class="auto-style1">關鍵字全符合</label>
+    </div>
+    <p>
+  </form>
+<div id="div1">
+<form id="saleitem">
+  <section style="float:left;height:300px;">
+    <div id="js-tabs" style="width:auto">
+      <div id="tabs-nav"> {% for r in tabs%}
+        {{r|safe}}   
+        {% endfor %} </div>
+      <div class="tabs-container"> {% for r in webWorklog%}
+        {% with tflc=forloop.counter%}
+        <div id="tab{{forloop.counter}}" class="tabs-panel" style="display:block">
+          <table id="schdata{{tflc}}"  class="showdata">
+            <tr>
+              <th id="box1">選取</th>
+              <th id="box2">發起時間</th>
+              <th id="box3">部門</th>
+              <th id="box4">發起人</th>
+              <th id="box5">主題</th>
+              <th id="box6">負責人</th>
+              <th id="box7">狀態</th>
+            </tr>
+            {% for rr in r%}
+            <tr>
+              <td><input type="radio" name="dc{{tflc}}"  onclick="tck('{{tflc}}')"></td>
+              {% for l in rr %}
+              <td> {{l}} </td>
+              {% endfor %} </tr>
+            {% endfor %}
+          </table>
+        </div>
+        {% endwith%}
+        {% endfor %} </div>
+    </div>
+  </section>
+  <aside style="float:right;width:550px;">
+    <IFRAME id="saleitemform" src="" style=" width:550px; height:450px; border:none"></IFRAME>
+  </aside>
+
+</form>
+</div>
+</body>
+</html>

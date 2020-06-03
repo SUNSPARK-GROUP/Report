@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>admin</title>
+</head>
+
+<body  bgcolor="#B0E0E6" style="width: 610px">
+<style type="text/css">
+#div1{
+/*background-image:url('/image/SGROUP1.jpg');*/
+	background-repeat:no-repeat;
+    width:600px;
+	height:50px;
+	
+	}
+#sel1{
+	float:left;
+	
+}
+.showdata{width:600px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 16px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0099FF;
+}
+}	
+
+</style>
+<script >
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+
+  function setsrc(ms) { 
+           var obj = document.getElementById('subform');
+           //obj.setAttribute("src",'');
+           obj.setAttribute("src",ms);
+           //obj.outerHTML='<IFRAME id="subform" src="http://127.0.0.1:8800/'+ms+'" width="250 px"></IFRAME>';
+           }
+</script >
+<header>
+<div id="div1" style="height: 93px; width: 600px;"  >
+<p>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >地址號:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000" >{{cid}}</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">店碼:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cid2}}</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">店名:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cname}}</label>
+</p>
+<p>
+    <label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >電話:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000" >{{ctel}}</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">地址:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cadd}}</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">路線:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cdriver}}</label>
+</p>
+	</div>
+
+</header>
+<div style="clear:left"><!--input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()"-->
+
+<!--{% load static %}a href="static/saledetel{{doco}}.docx" download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+<!--a href={% static "saledetel{{doco}}.docx" %} download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+<a href="MEDIA/saledetel{{doco}}.docx" download="銷貨單{{doco}}.docx">下載銷貨單</a>
+
+<table id="schdata"  class="showdata">
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                <th>項次</th>
+                <th>品名規格</th>
+                <th>說明</th>
+                <th>數量</th>
+                <th>單位</th>
+                <th>含稅單價</th>
+                <th>小計</th>
+            </tr>          
+            {% for r in F4211d%}
+            <tr>           
+                <!--tr-->{% for l in r %}                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                <!--/tr-->
+            </tr>
+            {% endfor %}
+
+</table>
+<section class="sel1" >
+</section>
+
+</div>
+<article >
+</article>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>logcheck</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<style type="text/css">
+.auto-style1 {
+	margin-bottom: 11px;
+}
+</style>
+<script type="text/javascript">
+  function reply_click()
+  {
+
+    $("input").removeAttr("disabled");
+	$("input").removeAttr("readonly");
+	$("textarea").removeAttr("disabled");
+	$("select").removeAttr("disabled");
+    $("input").show();
+    $("button").hide();
+	$("#form1").find(":text,textarea").each(function() {
+                $(this).val("");
+            });
+	$("#sDate").val("")
+	$("#checkbox").prop("checked", true);
+  }
+    function reply_click2()
+  {
+    $("input").removeAttr("disabled");
+	$("textarea").removeAttr("disabled");
+	$("select").removeAttr("disabled");
+    $("input").show();
+    $("button").hide();
+	$("#checkbox").prop("checked", true);
+  }
+</script>
+<script>
+$(document).ready(function(){
+	if($("#rt").val()=="OK"){
+	parent.aa()
+	}
+	})
+$(document).ready(function(){
+	if($("#mstatus").val()==""){
+		$('#status option[value=請選擇]').attr('selected', 'selected');
+	}else if($("#mstatus").val()=="進行中"){
+		$('#status option[value=進行中]').attr('selected', 'selected');
+	}else if($("#mstatus").val()=="已完成"){
+		$('#status option[value=已完成]').attr('selected', 'selected');
+	}
+})
+$(document).ready(function(){
+    $("#button").click(function(){
+        if($("#sDate").val()==""){
+            alert("請填寫時間");
+            eval("document.form1['sDate'].focus()");
+			return false;       
+        }else if($("#sSubject").val()==""){
+            alert("請填寫主題");
+            eval("document.form1['sSubject'].focus()");
+			return false;
+        }else if($("#sSponsor").val()==""){
+            alert("請填寫發起人");
+            eval("document.form1['sSponsor'].focus()");
+			return false;  
+		}else if($("#sPerson").val()==""){
+            alert("請填寫負責人");
+            eval("document.form1['sPerson'].focus()");
+			return false;
+		}else if($("#status").val()==""){
+            alert("請選擇工作狀態");
+            eval("document.form1['status'].focus()");
+			return false;
+		}else if($("#sDetail").val()==""){
+            alert("請填寫內容");
+            eval("document.form1['sDetail'].focus()");
+			return false;			
+        }else{
+            document.form1.submit();
+        }
+    })
+ })
+$(document).ready(function(){
+	if($("#sNo").val()==""){
+		reply_click();
+	}
+	})
+
+</script>
+</head>
+
+<body  bgcolor="#B0E0E6" style="width:500px; height: 26px;">
+<form id="form1" name="form1" method="post">
+  <div style="height: 35px">
+    <div style="display:none">
+      <input type="checkbox" name="checkbox" id="checkbox">
+    </div>
+    <div style="display:none">
+      <label><span style="font-family:DFKai-sb;font-size: 16px;">編號：</span></label>
+      <input name="sNo" type="text" disabled="disabled" id="sNo" style="width: 50px;font-size: 16px;" readonly value="{{sNo}}"/>
+    </div>
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">發起時間：</span></label>
+    <input id="sDate" type="date" name="sDate" style="font-size:16px; width: 150px;" disabled="disabled" readonly value="{{sDate}}">
+    <button type="button" id="1" name="1" onClick="reply_click()">新增</button>
+    <button type="button" id="2" name="2" onClick="reply_click2()">修改</button>
+    <input type="submit" name="button" id="button" value="送出" style="display:none;" onclick=""/>
+  </div>
+  <div style="height: 30px">
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">主題：</span></label>
+    <span style="font-size: 16px; font-weight: bolder;">
+    <input name="sSubject" type="text" disabled="disabled" id="sSubject" style="width: 200px;font-size: 16px;" value="{{sSubject}}" maxlength="50" readonly/>
+    </span> </div>
+  <div style="height: 30px">
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">問題發起人：</span></label>
+    <input name="sSponsor" type="text" disabled="disabled" id="initiator" style="width: 100px;font-size: 16px;" readonly value="{{sSponsor}}">
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">部門：</span></label>
+    <span class="auto-style1">
+    <input name="sDepartment" type="text" disabled style="font-size:16px; width: 128px;" value="{{sDepartment}}" readonly>
+    </span> </div>
+  <div style="height: 30px;float:left">
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">負責人：</span></label>
+    <input name="sPerson" type="text" style="width: 100px;font-size: 16px;" disabled="disabled" id="sPerson" readonly/ value="{{sPerson}}">
+  </div>
+  <div style="height: 30px;">
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">狀態：</span></label>
+    <select name="status" id="status" disabled style="font-size:18px; width: 128px;">
+      <option value="" selected>請選擇</option>
+      <option value="進行中">進行中</option>
+      <option value="已完成">已完成</option>
+    </select>
+    <label for="mstatus"></label>
+    <div style="display:none">
+    <input type="text" name="mstatus" id="mstatus" value="{{mstatus}}">
+    </div>
+    <div style="display:none">
+    <input type="text" name="rt" id="rt" value="{{rt}}">
+    </div>
+  </div>
+  <div>
+    <label><span style="font-family:DFKai-sb;font-size: 16px;">內容：</span></label>
+    <textarea name="sDetail" disabled="disabled" id="sDetail" style="resize:none;width:500px;height:245px; overflow-x:visible;overflow-y:visible;" type="text">{{sDetail}}</textarea>
+  </div>
+</form>
+</body>
+</html>

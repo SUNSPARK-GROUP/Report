@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>F03B11</title>
+</head>
+<body>
+<style> 
+.showdata{width:800px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0000AA;
+}
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<script>
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+} 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+ 
+</script>
+<p style="width: 800px; height: 30px;">
+<label class="auto-style1">單據類型<input name="RPDCT" style="width: 54px;font-size:16px" type="text" value="{{sRPDCT}}">
+</label>
+<label class="auto-style1">地址號<input name="AN8" style="width: 129px; font-size:16px" type="text" value="{{sAN8}}">
+</label>
+<!--input  name="Checkbox1" type="checkbox">
+
+          <label id="Label1">含零稅</label--> 
+{% if ck == 'ck1' %}
+<input id="ck1" name="Checkbox1" type="checkbox" checked=""  style="font-size:16px"  >
+{% else %}
+<input id="ck1" name="Checkbox1" type="checkbox"  style="font-size:16px"  >
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA">不包含特定客戶</label>
+	<p style="width: 800px; height: 20px;">
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp; &nbsp;
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>&nbsp;	
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至 </label>
+    <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>&nbsp;
+<input name="commit" type="submit" style="font-size:16px;color:#0000AA" value="查詢發票" onclick="document.getElementById('msl1').text=
+'ok'">
+<label id="msl1" style="font-size:16px;color:#FF0088">{{mess}}
+<!--input name="commit" type="submit" style="font-size:16px;color:#0000AA" value="修正稅額" disabled=""-->
+<input name="commit" type="submit" style="font-size:16px;color:#0000AA" value="修正稅額" onclick="sleep(1000)">
+
+</label></p>
+
+</form>
+</header>
+<form>
+<input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()">
+
+<table id="schdata"  class="showdata">
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                <th>地址號</th>
+                <th>客戶名稱</th>
+                <th>含稅金額</th>
+                <th>未稅金額</th>
+                <th>稅   額</th>
+                <th>正確稅額</th>
+                <th>稅 額 差</th>
+            </tr>            
+            {% for r in F03B11%}
+                <tr>{% for l in r %}                    
+                    <td> {{l}} </td> 
+                   {% endfor %}                   
+                </tr>
+            {% endfor %}
+
+</table></form>
+</body>
+
+</html>

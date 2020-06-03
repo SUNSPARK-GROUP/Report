@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+<!--text/html-->
+<head>
+<meta content="application/vnd.ms-excel; charset=utf-8" http-equiv="Content-Type">
+<title>營業區資料</title>
+</head>
+<style> 
+.showdata{width:300px;border:2px solid blue;} 
+.showdata caption{border:2px solid blue;font-size: 16px;height:auto;}
+.showdata th{border:1px solid blue;font-size: 16px;height:auto;}/*vertical-align: middle;*/
+.showdata td{
+	font: bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;text-align:center} 
+
+#dcname{
+	width:auto;
+	height:20px;
+	border:0px none;
+	background: #FFCCFF;
+	font: normal normal bold 100% serif;
+	outline:none;
+}
+#dcname:hover{
+	cursor:pointer;
+	color:#00BBFF;
+}
+
+#EIPform{
+	width: 50%;
+}
+
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+
+<script>
+function serchsdata(status){
+  var status = status
+  var barea=document.getElementById("barea").value; /*大區資料*/
+  var marea=document.getElementById("marea").value; /*中區資料*/
+  var principal1=document.getElementById("principal1").value; /*負責人1*/
+  var principal2=document.getElementById("principal2").value; /*負責人2*/
+  var AREA_NAME = document.getElementById("AREA_NAME").value
+
+  window.location.href = "?status="+status+"&barea="+ barea +"&marea="+marea+"&principal1="+ principal1 +"&principal2="+principal2+"&AREA_NAME="+AREA_NAME;
+
+}
+
+function myMsg(myObj){
+	var dcs= "AREASHOP?sareaNO="+myObj+"&status=";
+    var obj = document.getElementById('EIPform');
+    obj.setAttribute("src",dcs);
+}
+
+</script type="text/javascript" src="http://code.jquery.com/jquery-latest.js">
+<section style="float:left; width:350px; height:100px; ">
+<p style="width: 200px; height: 20px;"><label  style="font-weight:bold;font-size:16px;color:#0000AA">營業大區：</label>    
+<select id="barea" name="barea" style="font-size:16px" onChange="serchsdata('Barea')">
+       <option value="" ></option>
+        {% for a in area0%}
+        {% if a == barea%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+    </select></p>
+<label  style="font-weight:bold;font-size:16px;color:#0000AA">營業中區：</label>    
+<select id="marea" name="marea" style="font-size:16px" onChange="serchsdata('Marea')">
+<option value="" ></option>
+        {% for a in area1%}
+           {% if status == 'Alter' %}
+              {% if a == newMeara %}
+                <option value="{{a}}" selected>{{a}}</option>
+              {% else %}
+                <option value="{{a}}" >{{a}}</option>
+              {% endif %}
+           {% else %}
+              {% if a == marea%}
+                <option value="{{a}}" selected>{{a}}</option>
+              {% else %}
+                <option value="{{a}}" >{{a}}</option>
+              {% endif %}
+           {% endif %}
+        {% endfor %}
+</select>
+{% comment %} <button type="button" id="1" name="1" style="font-size:16px;color:#0000AA" onClick="myMsg2('{{marea}}')">修改</button>  {% endcomment %}
+</p>
+<p>
+<label  style="font-weight:bold;font-size:16px;color:#0000AA">中區名稱:</label>
+<input name="AREA_NAME" type="text" id="AREA_NAME" style="width: 120px;font-size: 16px;" value="{{AREA_NAME}}">
+</p>
+<p>
+<label  style="font-weight:bold;font-size:16px;color:#0000AA">負責人一:</label>    
+<input name="principal1" type="text" id="principal1" style="width: 120px;font-size: 16px;" value="{{principal1}}"> 
+</p>
+<p>
+<label  style="font-weight:bold;font-size:16px;color:#0000AA">負責人二:</label>    
+<input name="principal2" type="text" id="principal2" style="width: 120px;font-size: 16px;" value="{{principal2}}">
+
+<input id="AlterData" type="button" value="確定修改" onclick="serchsdata('Alter')">
+<label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+</p>
+
+<table id="schdata" class="showdata">
+<tr> 
+     <th>小區代碼</th>
+     <th>小區名稱</th>
+</tr> 
+     {% for r in area2%}               
+         <tr>
+             <td align="center"><input name="{{r.0}}" type="button" id="dcname" onclick="myMsg(this.name)" value="{{r.0}}"></td>
+             <td>{{r.1}}</td>
+         </tr>
+     {% endfor %}
+</table>
+</section>
+<div id="" style="">
+   <IFRAME id="EIPform" style="height:800px; border:none"></IFRAME>
+</div>
+ 
+</form>
+</header>
+</body>
+</html>

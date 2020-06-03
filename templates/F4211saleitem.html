@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>F4211SALEITEM</title>
+</head>
+<body>
+<style> 
+.showdata{width:400px;border:2px solid blue;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0000AA;
+}
+</style> 
+<!--script type="text/JavaScript" src="graphos/jQuery.print-master/jquery.print.js" />
+</script-->
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<script >
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+function tck(){
+var form = document.getElementById("saleitem");
+var table = document.getElementById("schdata");
+
+if (String(form.dc.length)=='undefined'){
+var dcs= "saledetelf4211?an8="+table.rows[1].cells[4].innerText+"&doco="+table.rows[1].cells[2].innerText+"&dcto="+table.rows[1].cells[1].innerText;
+       var obj = document.getElementById('saleitemform');
+       obj.setAttribute("src",dcs);
+ }
+else{
+    for(var i=0; i<form.dc.length;i++){
+        if(form.dc[i].checked){
+          var dcs= "saledetelf4211?an8="+table.rows[i+1].cells[4].innerText+"&doco="+table.rows[i+1].cells[2].innerText+"&dcto="+table.rows[i+1].cells[1].innerText;
+          var obj = document.getElementById('saleitemform');
+          obj.setAttribute("src",dcs);
+                    //alert(dcs);
+           break;
+           }
+    }
+   } 
+   
+}           
+function setsrc(ms) { 
+           
+           //obj.setAttribute("src",'');
+           obj.setAttribute("src",ms);
+           //obj.outerHTML='<IFRAME id="subform" src="http://127.0.0.1:8800/'+ms+'" width="250 px"></IFRAME>';
+           }
+ 
+ 
+</script>
+<p style="width: 800px; height: 30px;"><label class="auto-style1">單據類型<input name="SDDCTO" style="width: 54px;font-size:16px" type="text" value="{{sSDDCTO}}"></label>&nbsp;
+<label class="auto-style1">地址號<input name="an8" type="text" value="{{san8}}" style="font-size:16px"></label>
+<label class="auto-style1">單據編號<input name="SDDOCO" type="text" value="{{sSDDOCO}}" style="font-size:16px"> </label><label  style="font-weight:bold;font-size:16px;color:#0099FF">{{macct}}</label>
+    <label  style="font-weight:bold;font-size:16px;color:#0099FF">{{dept}}</label>
+	<p style="width: 800px; height: 20px;">
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label>
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span-->&nbsp;&nbsp; &nbsp;
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>&nbsp;	
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至 </label>
+    <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>&nbsp;
+<input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="查詢" >
+<!--onclick="document.getElementById('msl1').text='ok'"-->
+<label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}
+
+</label></p>
+
+</form>
+</header>
+<form id="saleitem">
+<section style="float:left; width:400px; height:533px; ">
+<input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()">
+
+<table id="schdata"  class="showdata">
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                <th>選取</th>
+                <th>單據類型</th>
+                <th>單據編號</th>
+                <th>客戶名稱</th>
+                <th>地 址 號</th>
+                
+            </tr>          
+            {% for r in F4211_1%}
+            <tr>
+            <td> <input type="radio" name="dc"  onclick="tck()"> </td>
+                <!--tr-->{% for l in r %}                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                <!--/tr-->
+            </tr>
+            {% endfor %}
+
+</table></section>
+
+<aside style="float:left;width:820px;"><IFRAME id="saleitemform" src="" style=" width: 100%; height:1000px; border:none"></IFRAME></aside>
+</form>
+</body>
+<body>
+</body>
+</html>

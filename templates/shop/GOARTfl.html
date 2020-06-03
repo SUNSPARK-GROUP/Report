@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>貨單明細</title>
+
+
+</head>
+
+<body  bgcolor="#B0E0E6" style="width: 530px; height: 25px; margin-right: 47px;" onload="jsTabs(event,'tab1');return false">
+<style type="text/css">
+#div1{
+/*background-image:url('/image/SGROUP1.jpg');*/
+	background-repeat:no-repeat;
+    width:500px;
+	height:50px;
+	
+	}
+#sel1{
+	float:left;
+	
+}
+.showdata{width:500px;border:2px solid blue;vertical-align: middle;border-collapse: collapse;} /*border-collapse: collapse;框線重疊*/
+.showdata th{border:1px solid blue;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFC8B4;
+	font-size: 16px;
+} 
+}	
+
+#tabs-nav{
+   margin: 0;
+   padding: 0;
+   position: relative;
+   text-align: left
+}
+a.tabs-menu {
+   display: inline-block;
+   background-color: #1b91ab;
+   font-size: 12px;
+   font-family: Arial,Helvetica,sans-serif;
+   color: #fff;
+   padding: 5px 10px;
+   text-shadow: 1px 1px 0px #1b91ab;
+   font-weight: bold;
+   text-decoration: none;
+   border: solid 1px #1b91ab;
+   border-bottom: 0;
+   border-radius: 3px 3px 0 0;
+}
+a.tabs-menu.tabs-menu-active {
+   background-color: #fff;
+   text-shadow: 1px 1px 0px #ffffff;
+   border: solid 1px #1b91ab;
+   color: #6b6b6b;
+   border-bottom: 0;
+}
+.tabs-container {
+   border: solid 1px #1b91ab;
+   margin-top: -1px;
+   background-color: #FFFFBB;
+   overflow: hidden;
+}
+.tabs-panel {
+   display: none;
+   min-height: 100px;
+   overflow: auto;
+   padding: 10px;
+   max-height: 300px;
+}
+.auto-style1 {
+	margin-right: 0px;
+}
+</style>
+<form id="form1"  runat="server"  method="get" class="auto-style1"  >
+<script src="jquery-tablepage-1.0.js"></script>
+<script >
+$(function(){
+    var $li = $('ul.tab-title li');
+        $($li. eq(0) .addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+    
+        $li.click(function(){
+            $($(this).find('a'). attr ('href')).show().siblings ('.tab-inner').hide();
+            $(this).addClass('active'). siblings ('.active').removeClass('active');
+        });
+    });
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+
+  function setsrc() { 
+           var obj = document.getElementById('ISdate');    
+           var canc = document.getElementById('cancelc');  
+           var umo = document.getElementById('unmono');    
+           return location.href='weborderdetel?gono={{gono}}&edit=yes&aday='+obj.value+'&canc='+canc.checked+'&umo='+umo.checked;           
+           }
+
+ function jsTabs(evt, tabId) {
+    var tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabs-panel");
+    for (var i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+     }
+     tablinks = document.getElementsByClassName("tabs-menu");
+     for (var i = 0; i < tablinks.length; i++) {
+       tablinks[i].className = tablinks[i].className.replace(" tabs-menu-active", "");
+     }
+     var tab = document.getElementById(tabId);
+         tab.style.display = "block";
+     evt.currentTarget.className += " tabs-menu-active";
+     return false;
+ }
+           
+           
+</script >
+
+
+<header>
+<div id="div1" style="height: 130px; width: 600px;"  >
+<p>
+	<!--label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >地址號:</label-->
+	<!--label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000" >{{cid}}</label-->
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">店碼:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cid}}</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">店名:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cname}}</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">訂貨時間:</label>
+    <label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{sdate}}</label>
+		
+</p>
+<p >
+    <label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA" >出貨日期:</label>
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px; height: 20px; width: 160px;"  value={{Aday}}>	
+{% if CK3 == 'on' %}
+<input  name="Checkbox3" id="cancelc" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox3" id="cancelc" type="checkbox">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 已取消 </label>
+{% if CK4 == 'on' %}
+<input  name="Checkbox4" id="unmono" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox4" id="unmono" type="checkbox">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 非正配單 </label>
+<input name="edit" type="button" style="font-size:16px;color:#0000AA" value="確定修改" onclick="setsrc()">
+	<!--label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">路線:</label>
+	<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cdriver}}</label-->
+</p>
+<p style="width: 600px">
+<label id="" style="font-size: 16px; font-weight: bolder; color: #0000AA">備註:</label>
+<label id="" style="font-size: 16px; font-weight: bolder; color: #CC0000">{{cmark}}</label>
+</p>
+	</div>
+
+</header>
+</form>
+<div style="clear:left"><!--input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()"-->
+
+<!--{% load static %}a href="static/saledetel{{doco}}.docx" download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+<!--a href={% static "saledetel{{doco}}.docx" %} download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+<!--a href="MEDIA/saledetel{{doco}}.docx" download="銷貨單{{doco}}.docx">下載銷貨單</a-->
+  
+<div id="js-tabs" style="width:auto">
+
+ <div id="tabs-nav">
+   
+   {% for r in tabs%}
+   {{r|safe}}
+   
+   {% endfor %} 
+   
+ </div>
+
+ <div class="tabs-container">
+{% for r in weborderfl%}
+<div id="tab{{forloop.counter}}" class="tabs-panel" style="display:block">
+<table id="schdata"  class="showdata">
+<tr>
+                
+                <th>料號</th>
+                <th>品名</th>
+                <th>數量</th>
+                <th>單價</th>
+                <th>小計</th>
+            </tr>          
+            {% for rr in r%}
+            <tr>           
+                <!--tr-->{% for l in rr %}                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                <!--/tr-->
+            </tr>
+            {% endfor %}
+
+</table>
+</div>
+{% endfor %}
+   <!--div id="tab1" class="tabs-panel" style="display:block">
+<table id="schdata"  class="showdata">
+
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                
+                <th>料號</th>
+                <th>品名</th>
+                <th>數量</th>
+                <th>單價</th>
+                <th>小計</th>
+            </tr>          
+            {% for r in weborderfl%}
+            <tr>           
+                {% for l in r %}                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                
+            </tr>
+            {% endfor %}
+
+</table>
+</div>
+
+   <div id="tab1" class="tabs-panel">
+tab2</div>
+
+   <div id="tab2" class="tabs-panel">
+tab3</div>
+
+ </div>
+</div-->
+
+<!--table id="schdata"  class="showdata">
+
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                
+                <th>料號</th>
+                <th>品名</th>
+                <th>數量</th>
+                <th>單價</th>
+                <th>小計</th>
+            </tr>          
+            {% for r in weborderfl%}
+            <tr>           
+                {% for l in r %}                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                
+            </tr>
+            {% endfor %}
+
+</table-->
+</div>
+<section class="sel1" >
+</section>
+</div>
+</div>
+<article >
+</article>
+</body>
+</html>

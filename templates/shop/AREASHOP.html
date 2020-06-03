@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<!--text/html-->
+<head>
+<meta content="application/vnd.ms-excel; charset=utf-8" http-equiv="Content-Type">
+<title>營業區資料</title>
+</head>
+<style> 
+.showdata{width:400px;border:2px solid blue;} 
+.showdata caption{border:2px solid blue;font-size: 16px;height:auto;}
+.showdata th{border:1px solid blue;font-size: 16px;height:auto;}/*vertical-align: middle;*/
+.showdata td{
+	font: bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;text-align:center} 
+
+#EIPform{
+	width: 60%;
+}
+</style> 
+
+<header>
+<form id="form1"  runat="server"  method="get"  >
+
+<script>
+
+function serchsdata(status){
+  var status = status
+  var sareaNO=document.getElementById("sareaNO"); /*門市代碼*/
+  var sareaNOVALUE = sareaNO.innerText
+  var sareaNAME=document.getElementById("sareaNAME"); /*門市名稱*/ 
+  var sareaNAMEVALUE = sareaNAME.innerText
+
+  window.location.href = "?status="+status+"&sareaNO="+sareaNOVALUE+"&sareaNAME="+sareaNAMEVALUE;
+
+}
+
+
+function check_all(obj,cName)
+{
+    var checkboxs = document.getElementsByName(cName);
+    for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;}
+}
+
+function check(formObj,status) {
+  var status =status
+    var sareaNO=document.getElementById("sareaNO"); /*門市代碼*/
+  var sareaNOVALUE = sareaNO.innerText
+  var sareaNAME=document.getElementById("sareaNAME"); /*門市名稱*/ 
+  var sareaNAMEVALUE = sareaNAME.innerText
+
+  var obj=formObj.shopid;
+  var selected=[];
+  for (var i=0; i<obj.length; i++) {
+    if (obj[i].checked) {
+      selected.push("'"+obj[i].value+"'");
+      }
+    }
+  {% comment %} alert(selected); {% endcomment %}
+  window.location.href = "?status="+status+"&sareaNO="+sareaNOVALUE+"&sareaNAME="+sareaNAMEVALUE+"&selected="+selected;
+  }
+
+
+function ShowDialog(url) {
+var tests=window.open(url,"Detail","height=500,width=550,left=150,top=50"); }
+
+</script type="text/javascript" src="http://code.jquery.com/jquery-latest.js">
+<div style="width: 700px; height: 70px; ">
+<div style="width: 300px; height: 20px;  float:left;">
+{% comment %} <p style="width: 800px; height: 20px;"><label  style="font-weight:bold;font-size:16px;color:#0000AA">門市代碼:</label>
+<input name="shopno" id="com1" style="width: 135px;font-size:16px" type="text" value="{{shopno}}" >
+<strong>
+<input name="Button2" type="button" value="搜尋門市代碼" onclick="ShowDialog('shop.html')" class="auto-style1">
+</strong>&nbsp;
+<input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="確定" > {% endcomment %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA">營業小區：</label>   
+<label id="sareaNO" style="font-weight: bolder; color: #CC0000" value ="{{sareaNO}}" >{{sareaNO}}</label>
+<label id="sareaNAME" style="font-weight: bolder; color: #CC0000" value ="{{sareaNAME}}" >{{sareaNAME}}</label>
+</p>
+<p>
+  {% if ck == 'true' %}
+  <input id="ck1" name="Checkbox1" type="checkbox" checked="" style="font-size:16px" onclick="serchsdata('Checkbox1:'+this.checked)">
+  {% else %}
+  <input id="ck1" name="Checkbox1" type="checkbox"            style="font-size:16px" onclick="serchsdata('Checkbox1:'+this.checked)">
+  {% endif %}
+  <label  style="font-weight:bold;font-size:16px;color:#FF0000">未分配門市</label>
+</p>
+</form>
+</header>
+<form>
+<div>
+{% if ck == 'true' %}
+<button type="button" id="in" name="in" style="font-size:16px;color:#0000AA" onClick="check(this.form,this.name)">加入</button> 
+{% else %}
+<button type="button" id="out" name="out" style="font-size:16px;color:#0000AA" onClick="check(this.form,this.name)">移出</button> 
+{% endif %}
+<label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+
+</div>
+<section style="float:left; width:520px; height:300px; ">
+<table id="schdata" class="showdata">
+<tr>
+     <th align="center"><input type="checkbox" name="shopid" onclick="check_all(this,'shopid')"></th>
+     <th>門市代碼</th>
+     <th>門市名稱</th>
+</tr> 
+     {% for r in shop%}               
+         <tr>
+             <td align="center" style = "background:#ADFF2F" ><input name="shopid" type="checkbox" value="{{r.0}}"></td>
+             <td style = "background:#ADFF2F">{{r.0}}</td>
+             <td style = "background:#ADFF2F">{{r.1}}</td>
+         </tr>
+     {% endfor %}
+</table>
+</section>
+<div id="sform" style="">
+   <IFRAME id="EIPform" style="height:500px; border:none"></IFRAME>
+</div>
+</body>
+</form>
+</html>

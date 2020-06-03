@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>weborderdetel</title>
+</head>
+<body onload="jsTabs(event,'tab1');return false">
+<style> 
+.showdata{width:500px;border:2px solid blue;border-collapse: collapse;} 
+.showdata th{border:1px solid blue;vertical-align: middle;}
+.showdata td{
+	font: normal normal bold 100% serif;
+	border: 1px solid blue;
+	background: #FFCCFF;
+	font-size: 16px;
+} 
+.auto-style1 {
+	font-weight: bold;
+	font-size: 16px;
+	color: #0000AA;
+}
+#tabs-nav{
+   margin: 0;
+   padding: 0;
+   position: relative;
+   text-align: left
+}
+a.tabs-menu {
+   display: inline-block;
+   background-color: #1b91ab;
+   font-size: 12px;
+   font-family: Arial,Helvetica,sans-serif;
+   color: #fff;
+   padding: 5px 10px;
+   text-shadow: 1px 1px 0px #1b91ab;
+   font-weight: bold;
+   text-decoration: none;
+   border: solid 1px #1b91ab;
+   border-bottom: 0;
+   border-radius: 3px 3px 0 0;
+}
+a.tabs-menu.tabs-menu-active {
+   background-color: #fff;
+   text-shadow: 1px 1px 0px #ffffff;
+   border: solid 1px #1b91ab;
+   color: #6b6b6b;
+   border-bottom: 0;
+}
+.tabs-container {
+   border: solid 1px #1b91ab;
+   margin-top: -1px;
+   background-color: #BBFFEE;
+   overflow: hidden;
+}
+.tabs-panel {
+   display: none;
+   min-height: 250px;
+   overflow: auto;
+   padding: 10px;
+   max-height: 400px;
+}
+
+</style> 
+<!--script type="text/JavaScript" src="graphos/jQuery.print-master/jquery.print.js" />
+</script-->
+<header>
+<form id="form1"  runat="server"  method="get"  >
+<script >
+function exportExcel(){
+  //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
+  var html = '';
+  html += document.getElementById('schdata').outerHTML + '';
+  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+}
+function tck(sd){
+var form = document.getElementById("saleitem");
+//var table = document.getElementById("schdata");
+var table = document.getElementById("schdata"+sd);
+var dc = document.getElementsByName("dc"+sd);
+
+if (String(dc.length)=='undefined'){
+var dcs= "weborderdetel?gono="+table.rows[1].cells[1].innerText;
+       var obj = document.getElementById('saleitemform');
+       obj.setAttribute("src",dcs);
+ }
+else{
+    for(var i=0; i<dc.length;i++){
+        if(dc[i].checked){
+          var dcs= "weborderdetel?gono="+table.rows[i+1].cells[1].innerText;
+          var obj = document.getElementById('saleitemform');
+          obj.setAttribute("src",dcs);
+                    //alert(dcs);
+           break;
+           }
+    }
+   } 
+   
+}           
+function setsrc(ms) { 
+           
+           //obj.setAttribute("src",'');
+           obj.setAttribute("src",ms);
+           //obj.outerHTML='<IFRAME id="subform" src="http://127.0.0.1:8800/'+ms+'" width="250 px"></IFRAME>';
+           }
+           
+function jsTabs(evt, tabId) {
+    var tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabs-panel");
+    for (var i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+     }
+     tablinks = document.getElementsByClassName("tabs-menu");
+     for (var i = 0; i < tablinks.length; i++) {
+       tablinks[i].className = tablinks[i].className.replace(" tabs-menu-active", "");
+     }
+     var tab = document.getElementById(tabId);
+         tab.style.display = "block";
+     evt.currentTarget.className += " tabs-menu-active";
+     return false;
+ }
+ 
+
+</script>
+<p style="width: 600px; height: 10px;">
+<!--label class="auto-style1">單據類型<input name="SDDCTO" style="width: 54px;font-size:16px" type="text" value="{{sSDDCTO}}"></label-->&nbsp;
+<label class="auto-style1">門&nbsp; 市
+<select id="shop0" name="shop01" style="font-size:16px" onChange="serchsdata('0')">
+       <option value="" ></option>
+        {% for a in shop0%}
+        {% if a == shop01%}
+          <option value="{{a}}" selected>{{a}}</option>
+        {% else %}
+          <option value="{{a}}" >{{a}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+<!--input name="IDCUST" type="text" value="{{sIDCUST}}" style="font-size:16px; width: 128px;"></label-->
+<!--label class="auto-style1">單據編號<input name="SDDOCO" type="text" value="{{sSDDOCO}}" style="font-size:16px"> </label-->
+<!--
+{% if CK1 == 'on' %}
+<input  name="Checkbox1" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox1" type="checkbox">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 有備註 </label>
+{% if CK2 == 'on' %}
+<input  name="Checkbox2" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox2" type="checkbox">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 未轉單 </label>
+{% if CK3 == 'on' %}
+<input  name="Checkbox3" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox3" type="checkbox">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 已取消 </label>
+{% if CK4 == 'on' %}
+<input  name="Checkbox4" type="checkbox" checked="checked" style="font-size:16px">
+{% else %}
+<input  name="Checkbox4" type="checkbox">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 非正配單 </label>
+-->
+
+<!--label  style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label-->
+	<!--img src="/image/emp.bmp" width="44" height="46" /><span--> &nbsp;
+	<input id="ISdate" type="date" name="Sday" style="font-size:16px"  value={{Sday}}>&nbsp;
+	
+	<label  style="font-weight:bold;font-size:16px;color:#0000AA"> 至 </label>
+    <input id="IEdate" type="date" name="Eday" style="font-size:16px"  value={{Eday}}>&nbsp;
+<input name="Submit1" type="submit" style="font-size:16px;color:#0000AA" value="查詢" >
+<!--onclick="document.getElementById('msl1').text='ok'"-->
+<label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
+<!--label  style="font-weight:bold;font-size:16px;color:#0099FF">{{macct}}</label>
+    <label  style="font-weight:bold;font-size:16px;color:#0099FF">{{dept}}</label-->
+	<p style="width: 500px; height: 20px;">
+	</p>
+
+</form>
+</header>
+<form id="saleitem">
+<section style="float:left; width:520px; height:300px; ">
+<!--input name="Button1" type="button" style="background-color:aquamarine;font-size:16px;color:crimson" value="匯出excel" onclick="exportExcel()"-->
+<div id="js-tabs" style="width:auto">
+ <div id="tabs-nav">   
+   {% for r in tabs%}
+   {{r|safe}}   
+   {% endfor %}    
+ </div>
+<div class="tabs-container">
+{% for r in weborder%}
+{% with tflc=forloop.counter%}
+<!--div id="tab{{forloop.counter}}" class="tabs-panel" style="display:block">
+<table id="schdata{{forloop.counter}}"  class="showdata"-->
+<div id="tab{{forloop.counter}}" class="tabs-panel" style="display:block">
+<table id="schdata{{tflc}}"  class="showdata">
+<tr>
+                
+                <th>選取</th>                
+                <th>單據編號</th>
+                <th>客戶名稱</th>
+                <th>金        額</th>
+                <th>出貨日期</th>
+            </tr>          
+            {% for rr in r%}
+            <tr> <td> <input type="radio" name="dc{{tflc}}"  onclick="tck('{{tflc}}')"> </td>          
+                {% for l in rr %}                                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                
+            </tr>
+            {% endfor %}
+
+</table>
+</div>{% endwith%}
+{% endfor %}
+<!--table id="schdata"  class="showdata">
+<caption>{{reportmes|safe}}</caption>
+<tr>
+                <th>選取</th>                
+                <th>單據編號</th>
+                <th>客戶名稱</th>
+                <th>金        額</th>
+                <th>出貨日期</th>
+                
+            </tr>          
+            {% for r in weborder%}
+            <tr>
+            <td> <input type="radio" name="dc"  onclick="tck()"> </td>
+                {% for l in r %}                    
+                    <td > {{l}} </td> 
+                   {% endfor %}                   
+                
+            </tr>
+            {% endfor %}
+
+</table  height:480px; -->
+</div>
+</div>
+
+</section>
+
+<aside style="float:left;width:700px;"><IFRAME id="saleitemform" src="" style=" width: 100%; height:480px; border:none"></IFRAME></aside>
+</form>
+</body>
+<body>
+</body>
+</html>
