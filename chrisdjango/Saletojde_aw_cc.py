@@ -109,8 +109,10 @@ def IBron (ono,today): #活動商品分單處理
           else:
             tqty=int(tsql[str(tf[0])][1])+int(tf[2])
             tsql[str(tf[0])]=[str(tf[0]),str(tqty)]#料號、數量
-      f1.write(str(tsql))
-      for key,value in tsql.items():
+      dtl=sorted(tsql.keys())
+      f1.write(str(dtl))
+      for l in range(len(dtl)):
+        value=tsql[dtl[l]]
         f1.write(str(value)+'\n')
         Ino+=1
         f1.write("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
