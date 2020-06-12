@@ -37,6 +37,95 @@ def CONORACLE(SqlStr):
 	  return TotalSession
 	  cursor.close()
 	else: conn.commit()
+def IBron (ono,today): #活動商品分單處理
+  #OR_ID='CRPDTA'#測試區
+  OR_ID='PRODDTA'#正式區
+  f1=open('c:\\IBron.txt','w')
+  cchd=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
+  ccmhd = cchd.cursor()  
+  ccfl=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
+  ccmfl = ccfl.cursor()
+  tccmfl = ccfl.cursor()
+  f1.write("1.SELECT count(*) FROM orderformpos_prod_sub  where order_no='"+ono+"' and ProdID  in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') "+'\n')
+  tccmfl.execute("SELECT count(*) FROM orderformpos_prod_sub  where order_no='"+ono+"' and ProdID  in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') ")
+  oqty=0
+  for c in tccmfl.fetchall():
+    if c[0]>0:
+      oqty=c[0]
+      #表頭 f4711
+      CNOS =  str(int(ono[8:14])+int(ono[14:])-1)#20200212值太大要8位     
+      ccmhd.execute("select order_no,no_sm,AccountID,CONCAT('1',substring(ArrivalTime,3,2),LPAD(LTRIM(CAST(DAYOFYEAR(ArrivalTime) AS CHAR)),3,'0')) as apdate,DateTime_1,NormalDelivery,AccountID"
+                       +",AccountType,'','','',AccountID,CONCAT('1',substring('"+today+"',3,2),LPAD(LTRIM(CAST(DAYOFYEAR('"+today+"') AS CHAR)),3,'0')) as ndate"
+                       +",substring(ArrivalTime,1,10) ArrivalTime,remark from orderformpos where  order_no='"+ono+"'")
+      for h in ccmhd.fetchall():
+        cid=str(h[2])#20191031
+        tdate=str(h[12])
+        odate=str(h[3])
+        adate=odate
+        remark1=''
+        remark2=''
+        if str(h[11])=='None' : cuid=str(h[2])
+        else: cuid=str(h[11])
+        
+        ORADB = CONORACLE("Select TO_CHAR(ABAN8) as ID_Cust, TO_CHAR(ABALPH) as NM_C  FROM "+OR_ID+".F0101 WHERE ABAT1='C'  and ABALKY ='"+cid+"'")
+        aid=''
+        for d in ORADB:
+          aid=str(d[0])
+        if oqty>10:
+          zn=' '     #全聯
+        else:
+          zn='1';    #半聯
+      f1.write("2.INSERT INTO "+OR_ID+".F47011 (SYEDTY,SYEDSQ,SYEKCO,SYEDOC,SYEDCT,SYEDLN,SYEDST,SYEDDT,SYEDER,SYEDDL,SYEDSP,SYTPUR,SYKCOO"
+                        +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
+                        +" VALUES ('1','1','00100','"+CNOS+"','E1','1000','850','"+tdate+"','R','"+str(oqty)+"','N','00','00100','S2','        A001','00100','00100','"
+                        +CNOS+"','E1','"+aid+"','"+aid+"','"+odate+"','"+adate+"','"+remark1+"','"+remark2+"','"+CNOS+"','"+zn+"')"+'\n')
+      ORADB=CONORACLE("INSERT INTO "+OR_ID+".F47011 (SYEDTY,SYEDSQ,SYEKCO,SYEDOC,SYEDCT,SYEDLN,SYEDST,SYEDDT,SYEDER,SYEDDL,SYEDSP,SYTPUR,SYKCOO"
+                        +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
+                        +" VALUES ('1','1','00100','"+CNOS+"','E1','1000','850','"+tdate+"','R','"+str(oqty)+"','N','00','00100','S2','        A001','00100','00100','"
+                        +CNOS+"','E1','"+aid+"','"+aid+"','"+odate+"','"+adate+"','"+remark1+"','"+remark2+"','"+CNOS+"','"+zn+"')")
+      
+      ccmfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+ono
+	                    +"' and ProdID  in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y')  order by ProdID")
+      Ino=0	
+      pl=[]	
+      tsql={}	  
+      for sitem in ccmfl.fetchall():            
+        if sitem[6]=='None':
+          NewItemID='A'
+        else:
+          NewItemID=str(sitem[6]).upper()
+        if sitem[7]=='N':
+          Branch_Plan=' '
+        else:
+          Branch_Plan='        A001'
+        qty=int(sitem[3])*10000 
+        f1.write("3.SELECT ID_ITEM,NM_ITEM,basqty*"+str(qty)+" FROM IBRON WHERE ID_ITEM='"+str(sitem[1])+"' AND MASTER='Y'  UNION ALL "
+                       +"SELECT ID_ITEM,NM_ITEM,basqty*"+str(qty)+" FROM IBRON WHERE ID_MASTER='"+str(sitem[1])+"' AND MASTER='N' "+'\n')		
+        tccmfl.execute("SELECT ID_ITEM,NM_ITEM,basqty*"+str(qty)+" FROM IBRON WHERE ID_ITEM='"+str(sitem[1])+"' AND MASTER='Y'  UNION ALL "
+                       +"SELECT ID_ITEM,NM_ITEM,basqty*"+str(qty)+" FROM IBRON WHERE ID_MASTER='"+str(sitem[1])+"' AND MASTER='N' ")
+        for tf in tccmfl.fetchall():
+          if str(tf[0]) not in tsql:
+            tsql[str(tf[0])]=[str(tf[0]),str(tf[2])]#料號、數量
+          else:
+            tqty=int(tsql[str(tf[0])][1])+int(tf[2])
+            tsql[str(tf[0])]=[str(tf[0]),str(tqty)]#料號、數量
+      f1.write(str(tsql))
+      for key,value in tsql.items():
+        f1.write(str(value)+'\n')
+        Ino+=1
+        f1.write("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
+                      +",SZAN8,SZSHAN,SZTRDJ,SZRSDJ,SZLITM,SZLOCN,SZLNTY,SZNXTR,SZLTTR,SZUOM,SZUORG,SZVR01 ) "
+                      +" VALUES ('2','"+str(Ino)+"','00100','"+CNOS+"','E1','"+str(Ino)+"000','850','"+tdate+"','R','N','00100','S2'"
+                      +",'"+str(Ino)+"000','"+Branch_Plan+"','00100','00100','"+CNOS+"','E1','"+str(Ino)+"000','"+aid+"','"+aid+"','"+odate+"','"+adate
+                      +"','"+value[0]
+                      +"','','','','','',"+value[1]+",'"+CNOS+"')"+'\n')
+        ORADB=CONORACLE("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
+                      +",SZAN8,SZSHAN,SZTRDJ,SZRSDJ,SZLITM,SZLOCN,SZLNTY,SZNXTR,SZLTTR,SZUOM,SZUORG,SZVR01 ) "
+                      +" VALUES ('2','"+str(Ino)+"','00100','"+CNOS+"','E1','"+str(Ino)+"000','850','"+tdate+"','R','N','00100','S2'"
+                      +",'"+str(Ino)+"000','"+Branch_Plan+"','00100','00100','"+CNOS+"','E1','"+str(Ino)+"000','"+aid+"','"+aid+"','"+odate+"','"+adate
+                      +"','"+value[0]
+                      +"','','','','','',"+value[1]+",'"+CNOS+"')")
+  f1.close()
 def set2jde(tday):
   f=open('c:\\set2jde111.txt','w')
   #訂單合併
@@ -103,7 +192,7 @@ def set2jde(tday):
   #1.搜尋當天的單
   sdate = showday(tday,'-',0)
   ndate = showday(0,'',0)
-  #sdate='20190509'
+  #sdate='2020-05-10'
   #print (sdate)  
   ordershop={}#門市id紀錄
   f.write(sdate+'\n')
@@ -148,6 +237,7 @@ def set2jde(tday):
       hdl.append(str(sales[4]))
       salel.append(hdl)
       go_no=str(sales[0])
+      IBron(go_no,ndate)#活動商品分單處理
       #print (go_no)
       #print(str(sales[2]))
       				
@@ -160,7 +250,7 @@ def set2jde(tday):
                        +",substring(ArrivalTime,1,10) ArrivalTime,remark from orderformpos where  order_no='"+str(sales[0])+"'"+'\n')
     
     
-      ccdmodfl.execute("SELECT count(*) as q FROM orderformpos_prod_sub WHERE order_no='"+str(sales[0])+"' ")
+      ccdmodfl.execute("SELECT count(*) as q FROM orderformpos_prod_sub WHERE order_no='"+str(sales[0])+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') ")
     
       for flcount in ccdmodfl:
         odnos=int(flcount[0])
@@ -287,13 +377,13 @@ def set2jde(tday):
                             +" select 'order_no',a.ID_ITEM,a.NM_ITEM,sum(a.QTY) as QTY,a.UPRICE,sum(a.SUBTOT) as SUBTOT ,a.ID_ITEM ,''  from  (SELECT * FROM WEBBookingOrder "
                             +" WHERE applydate<='"+apdateb+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID"+'\n')
             ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"' and ProdID not in (SELECT  id_item  FROM WEBBookingART) "
-                            +" union all "
+                            +" and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y')  union all "
                             +" select 'order_no',a.ID_ITEM,a.NM_ITEM,sum(a.QTY) as QTY,a.UPRICE,sum(a.SUBTOT) as SUBTOT ,a.ID_ITEM ,''  from  (SELECT * FROM WEBBookingOrder "
                             +" WHERE applydate<='"+apdateb+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID")
             inbooking=1
           else:
             f.write("9-1. SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"'"+'\n')
-            ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"'  order by ProdID")
+            ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') order by ProdID")
             inbooking=0
           I12=0
           for sitem in ccdmodfl:
