@@ -377,11 +377,11 @@ def set2jde(tday):
             f.write("9. SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"'"
                             +" union all "
                             +" select 'order_no',a.ID_ITEM,a.NM_ITEM,sum(a.QTY) as QTY,a.UPRICE,sum(a.SUBTOT) as SUBTOT ,a.ID_ITEM ,''  from  (SELECT * FROM WEBBookingOrder "
-                            +" WHERE applydate<='"+apdateb+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID"+'\n')
+                            +" WHERE applydate<='"+t_str+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID"+'\n')
             ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"' and ProdID not in (SELECT  id_item  FROM WEBBookingART) "
                             +" and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y')  union all "
                             +" select 'order_no',a.ID_ITEM,a.NM_ITEM,sum(a.QTY) as QTY,a.UPRICE,sum(a.SUBTOT) as SUBTOT ,a.ID_ITEM ,''  from  (SELECT * FROM WEBBookingOrder "
-                            +" WHERE applydate<='"+apdateb+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID")
+                            +" WHERE applydate<='"+t_str+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID")
             inbooking=1
           else:
             f.write("9-1. SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"'"+'\n')
