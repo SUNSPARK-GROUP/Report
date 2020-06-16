@@ -324,10 +324,11 @@ def set2jde(tday):
                         +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
                         +" VALUES ('1','1','00100','"+TNOS+"','E1','1000','850','"+nowdate+"','R','"+str(dnos)+"','N','00','00100','S2','        A001','00100','00100','"
                         +TNOS+"','E1','"+adid+"','"+adid+"','"+ordate+"','"+apdate+"','"+remark1+"','"+remark2+"','"+TNOS+"','"+zon+"')"+'\n')
-          ORADB=CONORACLE("INSERT INTO "+OR_DATAID+".F47011 (SYEDTY,SYEDSQ,SYEKCO,SYEDOC,SYEDCT,SYEDLN,SYEDST,SYEDDT,SYEDER,SYEDDL,SYEDSP,SYTPUR,SYKCOO"
-                        +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
-                        +" VALUES ('1','1','00100','"+TNOS+"','E1','1000','850','"+nowdate+"','R','"+str(dnos)+"','N','00','00100','S2','        A001','00100','00100','"
-                        +TNOS+"','E1','"+adid+"','"+adid+"','"+ordate+"','"+apdate+"','"+remark1+"','"+remark2+"','"+TNOS+"','"+zon+"')")					  
+          if dnos>0:
+            ORADB=CONORACLE("INSERT INTO "+OR_DATAID+".F47011 (SYEDTY,SYEDSQ,SYEKCO,SYEDOC,SYEDCT,SYEDLN,SYEDST,SYEDDT,SYEDER,SYEDDL,SYEDSP,SYTPUR,SYKCOO"
+                          +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
+                          +" VALUES ('1','1','00100','"+TNOS+"','E1','1000','850','"+nowdate+"','R','"+str(dnos)+"','N','00','00100','S2','        A001','00100','00100','"
+                          +TNOS+"','E1','"+adid+"','"+adid+"','"+ordate+"','"+apdate+"','"+remark1+"','"+remark2+"','"+TNOS+"','"+zon+"')")					  
           ccdmodt.execute("update orderformpos set NO_SM='已轉單',Oracle_AddNum='"+TNOS+"' where order_no ='"+go_no+"'"+'\n')
           f.write("7. update orderformpos set NO_SM='已轉單',Oracle_AddNum='"+TNOS+"' where order_no ='"+go_no+"'"+'\n')
           chaincodet.commit()
