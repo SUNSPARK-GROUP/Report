@@ -252,7 +252,8 @@ def set2jde(tday):
                        +",substring(ArrivalTime,1,10) ArrivalTime,remark from orderformpos where  order_no='"+str(sales[0])+"'"+'\n')
     
     
-      ccdmodfl.execute("SELECT count(*) as q FROM orderformpos_prod_sub WHERE order_no='"+str(sales[0])+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') ")
+      ccdmodfl.execute("SELECT count(*) as q FROM orderformpos_prod_sub WHERE order_no='"+str(sales[0])+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') "
+	                   +" and ProdID not in (select id_item from webbookingart where online='Y')")#20200622
     
       for flcount in ccdmodfl:
         odnos=int(flcount[0])
