@@ -354,7 +354,7 @@ def weborder2jde_cc(request):
 def saledetelf4211(request): 
   context= {}
   context_wt= {}
-  #f=open(r'C:\Users\chris\chrisdjango\error_o.txt','w')
+  f=open(r'C:\Users\chris\chrisdjango\error_4211.txt','w')
   try:
     f4211d=[]
     f4211dw=[]
@@ -365,8 +365,12 @@ def saledetelf4211(request):
     f.write("select F01.aban8, F01.abalky,F01.abalph,F16.ALADD1, replace(f15.wpar1,' ')||'-'||replace(f15.wpph1,' '),f11.wwalph,F01.ABTX2 from f0101 F01,F0116 F16,f0115 f15,f0111 f11 "
              +" WHERE f16.alan8=f01.aban8 and f01.aban8='"+cid+"' and f15.wpan8=f01.aban8 and f15.WPphtp='TEL' and f11.wwalph like replace(abac30,' ')||'-%'"+'\n')
     '''
+    '''
     serdata=CONORACLE("select F01.aban8, F01.abalky,F01.abalph,F16.ALADD1, replace(f15.wpar1,' ')||'-'||replace(f15.wpph1,' '),f11.wwalph,F01.ABTX2,t009.dv75tsun,f112.WWMLNM from f0101 F01,F0116 F16,f0115 f15,f0111 f11,F0111 F112,F75T009 T009 "
-                      +" WHERE f16.alan8=f01.aban8 and f01.aban8='"+cid+"' and f15.wpan8=f01.aban8 and f15.WPphtp='TEL' and t009.dvan8=f01.aban8 and t009.dvco='00000' and f11.wwalph like replace(abac30,' ')||'-%' AND F112.wwan8=  f01.aban8 AND F112.WWIDLN=0")
+                      +" WHERE f16.alan8=f01.aban8 and f01.aban8='"+cid+"' and f15.wpan8=f01.aban8 and f15.WPphtp='TEL' and t009.dvan8=f01.aban8 and (t009.dvco='00000' or t009.dvco='00100') and f11.wwalph like replace(abac30,' ')||'-%' AND F112.wwan8=  f01.aban8 AND F112.WWIDLN=0")
+    '''
+    serdata=CONORACLE("select F01.aban8, F01.abalky,F01.abalph,F16.ALADD1, replace(f15.wpar1,' ')||'-'||replace(f15.wpph1,' '),f11.wwalph,F01.ABTX2,t009.dv75tsun,f112.WWMLNM from f0101 F01,F0116 F16,f0115 f15,f0111 f11,F0111 F112,F75T009 T009 "
+                      +" WHERE f16.alan8=f01.aban8 and f01.aban8='"+cid+"' and f15.wpan8=f01.aban8 and f15.WPphtp='TEL' and t009.dvan8=f01.aban8 and f11.wwan8=f01.aban8   and (t009.dvco='00000' or t009.dvco='00100')  AND F112.wwan8=  f01.aban8 AND F112.WWIDLN=0")
     for data in serdata:
       context['cid'] = str(data[0])#門市碼
       context['cid2'] = str(data[1])#門市碼2
@@ -391,10 +395,10 @@ def saledetelf4211(request):
     context_wt['doco'] =doco
     for data in serdata:
       context_wt['cctel'] = str(data[4])#手機"
-    '''
+    
     f.write("select sdlnid/1000 as sdlnid,sddsc1,sddsc2,sdsoqs/10000,sduom1,round(sduprc/10000*1.05,0),round(sduprc/10000*1.05,0)*sdsoqs/10000 as sdaexp ,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(SDTRDJ,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(SDTRDJ,4,3)-1,'yyyymmdd'))) AS SDTRDJ"
 	                 +" from f4211  where sddoco='"+doco+"'   AND SDAN8='"+cid+"' and sddcto='"+dcto+"' ")
-    '''
+    
     serdata=CONORACLE("select shdoco,shdel1,shdel2 from f4201 where shdoco='"+doco+"' and shan8='"+cid+"'  ")
     for data in serdata:
       context_wt['memo'] = str(data[1])#memo
@@ -441,7 +445,7 @@ def saledetelf4211(request):
     #f.write(r'C:\Users\CHRIS\chrisdjango\docxt\saledetelf4211_tp.docx')
     #tpl = DocxTemplate(r'C:\Users\CHRIS\chrisdjango\docxt\saledetelf4211_tp.docx')#測試路徑
     tpl = DocxTemplate(r'C:\Users\Administrator\chrisdjango\docxt\saledetelf4211_tp.docx')#實際路徑
-	
+    f.write(str(context_wt))
     tpl.render(context_wt)
     #f.write(r'C:\Users\CHRIS\chrisdjango\MEDIA\saledetel'+doco+'.docx')	
     #tpl.save(r'C:\Users\CHRIS\chrisdjango\MEDIA\saledetel'+doco+'.docx')#測試路徑
@@ -449,7 +453,7 @@ def saledetelf4211(request):
     #tpl.save(r'C:\Users\CHRIS\chrisdjango\static\saledetel'+doco+r'.docx')
   except:
     s=''    
-  #f.close()  
+  f.close()  
   return render(request, 'saledetelf4211.html',context )#傳入參數
 def weborder(request): 
   context= {}
