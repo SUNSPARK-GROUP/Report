@@ -41,6 +41,8 @@ def IBron (ono,today): #活動商品分單處理
   #OR_ID='CRPDTA'#測試區
   OR_ID='PRODDTA'#正式區
   f1=open('c:\\IBron.txt','w')
+  connection214=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.214;DATABASE=ERPS;UID=apuser;PWD=0920799339')
+  cur214cnts=connection214.cursor()
   cchd=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
   ccmhd = cchd.cursor()  
   ccfl=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
@@ -53,7 +55,14 @@ def IBron (ono,today): #活動商品分單處理
     if c[0]>0:
       oqty=c[0]
       #表頭 f4711
-      CNOS =  str(int(ono[8:14])+int(ono[14:])-1)#20200212值太大要8位     
+      #CNOS =  str(int(ono[8:14])+int(ono[14:])-1)#20200212值太大要8位
+      cur214cnts.execute("select substring('0000', 1, 4-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+      try:
+        for dno in cur214cnts.fetchone():
+          CNOS =ono[:4]+str(dno[0])
+        cur214cnts.execute("update Tsysno set nextno=convert(int,nextno)+1  where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+      except:
+        CNOS =  str(int(ono[8:14])+int(ono[14:])-1)#20200212值太大要8位	  
       ccmhd.execute("select order_no,no_sm,AccountID,CONCAT('1',substring(ArrivalTime,3,2),LPAD(LTRIM(CAST(DAYOFYEAR(ArrivalTime) AS CHAR)),3,'0')) as apdate,DateTime_1,NormalDelivery,AccountID"
                        +",AccountType,'','','',AccountID,CONCAT('1',substring('"+today+"',3,2),LPAD(LTRIM(CAST(DAYOFYEAR('"+today+"') AS CHAR)),3,'0')) as ndate"
                        +",substring(ArrivalTime,1,10) ArrivalTime,remark from orderformpos where  order_no='"+ono+"'")
@@ -210,7 +219,9 @@ def set2jde(tday):
   cur206Bhd = connection2061.cursor()#BOOKING_HD 
   cur206Bfl = connection2062.cursor()#BOOKING_FL
   '''
-  #f.write('ccdmodhd'+'\n')
+  #f.write('ccdmodhd'+'\n')  
+  connection214=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.214;DATABASE=ERPS;UID=apuser;PWD=0920799339')
+  cur214cnts=connection214.cursor()
   chaincodehd=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
   ccdmodhd = chaincodehd.cursor()  
   chaincodefl=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
@@ -319,7 +330,14 @@ def set2jde(tday):
           else:
             zon='1';    #半聯
         
-          TNOS =  str(int(str(sale[0])[8:14])+int(str(sale[0])[14:]))#20200212值太大要8位
+          #TNOS =  str(int(str(sale[0])[8:14])+int(str(sale[0])[14:]))#20200212值太大要8位
+          cur214cnts.execute("select substring('0000', 1, 4-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+          try:
+            for dno in cur214cnts.fetchone():
+              TNOS =ono[:4]+str(dno[0])
+            cur214cnts.execute("update Tsysno set nextno=convert(int,nextno)+1  where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+          except:
+            TNOS =  str(int(ono[8:14])+int(ono[14:]))#20200212值太大要8位
           f.write(adid+' : '+zon+' : '+str(sale[0])[8:14]+'+'+str(sale[0])[14:]+'\n')
           f.write("6. INSERT INTO "+OR_DATAID+".F47011 (SYEDTY,SYEDSQ,SYEKCO,SYEDOC,SYEDCT,SYEDLN,SYEDST,SYEDDT,SYEDER,SYEDDL,SYEDSP,SYTPUR,SYKCOO"
                         +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
