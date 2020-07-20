@@ -56,11 +56,12 @@ def IBron (ono,today): #活動商品分單處理
       oqty=c[0]
       #表頭 f4711
       #CNOS =  str(int(ono[8:14])+int(ono[14:])-1)#20200212值太大要8位
-      cur214cnts.execute("select substring('0000', 1, 4-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+      cur214cnts.execute("select substring('000000', 1, 6-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+ono[:4]+"'")
       try:
         for dno in cur214cnts.fetchone():
-          CNOS =ono[:4]+str(dno[0])
+          CNOS =ono[2:4]+str(dno)
         cur214cnts.execute("update Tsysno set nextno=convert(int,nextno)+1  where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+        cur214cnts.commit()
       except:
         CNOS =  str(int(ono[8:14])+int(ono[14:])-1)#20200212值太大要8位	  
       ccmhd.execute("select order_no,no_sm,AccountID,CONCAT('1',substring(ArrivalTime,3,2),LPAD(LTRIM(CAST(DAYOFYEAR(ArrivalTime) AS CHAR)),3,'0')) as apdate,DateTime_1,NormalDelivery,AccountID"
@@ -329,16 +330,18 @@ def set2jde(tday):
             zon=' '     #全聯
           else:
             zon='1';    #半聯
-        
+          f.write(adid+'\n')
           #TNOS =  str(int(str(sale[0])[8:14])+int(str(sale[0])[14:]))#20200212值太大要8位
-          cur214cnts.execute("select substring('0000', 1, 4-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+          #f.write("select substring('000000', 1, 6-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+str(sale[0][:4])+"'")
+          cur214cnts.execute("select substring('000000', 1, 6-len(nextno)) + convert(varchar,nextno) AS nextno from Tsysno where formstr='WEBORDERS' and year='"+str(sale[0][:4])+"'")
           try:
             for dno in cur214cnts.fetchone():
-              TNOS =ono[:4]+str(dno[0])
-            cur214cnts.execute("update Tsysno set nextno=convert(int,nextno)+1  where formstr='WEBORDERS' and year='"+ono[:4]+"'")
+              TNOS =str(sale[0][2:4])+str(dno)
+            cur214cnts.execute("update Tsysno set nextno=convert(int,nextno)+1  where formstr='WEBORDERS' and year='"+str(sale[0][:4])+"'")
+            cur214cnts.commit()
           except:
-            TNOS =  str(int(ono[8:14])+int(ono[14:]))#20200212值太大要8位
-          f.write(adid+' : '+zon+' : '+str(sale[0])[8:14]+'+'+str(sale[0])[14:]+'\n')
+            TNOS =  str(int(str(sale[0])[8:14])+int(str(sale[0])[14:]))#20200212值太大要8位
+          f.write(adid+' : '+zon+' : '+TNOS+'\n')
           f.write("6. INSERT INTO "+OR_DATAID+".F47011 (SYEDTY,SYEDSQ,SYEKCO,SYEDOC,SYEDCT,SYEDLN,SYEDST,SYEDDT,SYEDER,SYEDDL,SYEDSP,SYTPUR,SYKCOO"
                         +",SYDCTO,SYMCU,SYCO,SYOKCO,SYOORN,SYOCTO,SYAN8,SYSHAN,SYTRDJ,SYPPDJ,SYDEL1,SYDEL2,SYVR01,SYZON) "
                         +" VALUES ('1','1','00100','"+TNOS+"','E1','1000','850','"+nowdate+"','R','"+str(dnos)+"','N','00','00100','S2','        A001','00100','00100','"
