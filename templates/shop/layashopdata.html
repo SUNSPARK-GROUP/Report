@@ -29,7 +29,7 @@
 </style> 
 
 <header>
-<form id="form1"  runat="server"  method="get"  >
+<form id="shopdata"  runat="server"  method="get"  >
 <script>
 function exportExcel(){
   //var html = '&lt;meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8" />&lt;title>Excel&lt;/title>';
@@ -40,24 +40,22 @@ function exportExcel(){
 function ShowDialog(url) {
 var tests=window.open(url,"Detail","height=500,width=550,left=150,top=50"); }
 
-function getcbox1(){
-   var ck1=form1.Checkbox1;
-   var ck2=form1.Checkbox2;
-   if (ck1.checked)  {
-    ck2.checked=false;}
-   else { ck2.checked=true;}
-   }
-function getcbox2(){
-   var ck1=form1.Checkbox1;
-   var ck2=form1.Checkbox2;
-   if (ck2.checked)  {
-    ck1.checked=false;}
-   else { ck1.checked=true;}
-   }
+function getcbox(ck){
 
+   var form = document.getElementById("shopdata"); 
+   for(var i=0; i<form.length;i++){
+     //alert(form[i].id.substring(0,2))
+     if (form[i].id.substring(0,2)=="ck") {
+       if (form[i].id!=ck){
+         form[i].checked=false;}
+       }
+     }
+   
+   }  
+  
 </script type="text/javascript" src="http://code.jquery.com/jquery-latest.js">
 <p style="width: 800px; height: 20px;"><label class="auto-style2">拉亞門市<label class="auto-style1">
-<select id="shop0" name="shop01" style="font-size:16px; width: 235px;" "> <!--onChange="serchsdata('0')-->
+<select id="shop0" name="shop01" style="font-size:16px; width: 235px; "> <!--onChange="serchsdata('0')-->
        <option value="" ></option>
         {% for a in shop0%}
         {% if a == shop01%}
@@ -73,18 +71,26 @@ function getcbox2(){
 	<!--input name="Button2" type="button" value="搜尋地址號" onclick="ShowDialog('company.html')" class="auto-style1"--></strong>&nbsp;
 <label  style="font-weight:bold;font-size:16px;color:#CC0000">
 {% if ck == 'ck1' %}
-<input id="ck1" name="Checkbox1" type="checkbox" checked=""  style="font-size:16px"  onclick="getcbox1()">
+<input id="ck1" name="Checkbox1" type="checkbox" checked=""  style="font-size:16px"  onclick="getcbox('ck1')">
 {% else %}
-<input id="ck1" name="Checkbox1" type="checkbox"  style="font-size:16px"  onclick="getcbox1()">
+<input id="ck1" name="Checkbox1" type="checkbox"  style="font-size:16px"  onclick="getcbox('ck1')">
 {% endif %}
 <label id="Label1">銷售金額</label>
 {% if ck == 'ck2' %}
-<input id="ck2" name="Checkbox2" type="checkbox" checked="" style="font-size:16px" onclick="getcbox2()">
+<input id="ck2" name="Checkbox2" type="checkbox" checked="" style="font-size:16px" onclick="getcbox('ck2')">
 {% else %}
-<input id="ck2" name="Checkbox2" type="checkbox"  style="font-size:16px" onclick="getcbox2()">
+<input id="ck2" name="Checkbox2" type="checkbox"  style="font-size:16px" onclick="getcbox('ck2')">
 {% endif %}
-<label  style="font-weight:bold;font-size:16px;color:#CC0000">銷售數量</label>{{acct}}.{{subacct}}</label>
-    <label  style="font-weight:bold;font-size:16px;color:#0099FF">{{dept}}</label></p>
+<label  style="font-weight:bold;font-size:16px;color:#CC0000">銷售數量</label>
+<!--
+{% if ck == 'ck3' %}
+<input id="ck3" name="Checkbox3" type="checkbox" checked="" style="font-size:16px" onclick="getcbox('ck3')">
+{% else %}
+<input id="ck3" name="Checkbox3" type="checkbox"  style="font-size:16px" onclick="getcbox('ck3')">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#CC0000">類別數量佔比</label> -->
+    <label  style="font-weight:bold;font-size:16px;color:#0099FF">{{dept}}</label></label>
+</p>
     <!--input name="2EXCEL" type="submit" style="font-size:16px;color:#0000AA" value="匯出EXCEL" ><-->
 	<p style="width: 800px; height: 20px;">
 	&nbsp;<label style="font-weight:bold;font-size:16px;color:#0000AA">查詢日期</label>

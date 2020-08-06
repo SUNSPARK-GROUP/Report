@@ -121,14 +121,16 @@ def layashopdata(request):
     wb = Workbook()	
     ws1 = wb.active	
     ws1.title = "data"
+    #營業額
     if ck1=='on':
       ws1.append(['拉亞直營營業額('+sday+'~'+eday+')'])
-      ws1.append(['日期','星期','門市','營業額','內用筆數/平均金額','內用金額','外帶筆數/平均金額','外帶金額','電話筆數/平均金額','電話金額','門市外送筆數/平均金額','門市外送金額','外送網筆數/平均金額','外送網金額','其他筆數/平均金額','其他金額'])
-      title=['<th style="width:9%;">日期</th>','<th style="width:6%;">星期</th>','<th style="width:9%;">門市</th>','<th style="width:5%;">營業額</th>','<th style="width:6%;">內用筆數/平均金額</th>','<th style="width:6%;">內用金額</th>'
-             ,'<th style="width:6%;">外帶筆數/平均金額</th>','<th style="width:6%;" >外帶金額</th>','<th style="width:6%;">電話筆數/平均金額</th>','<th style="width:6%;">電話金額</th>'
-    		 ,'<th style="width:6%;">外送筆數/平均金額</th>','<th style="width:6%;">外送金額</th>','<th style="width:6%;">外送網筆數/平均金額</th>','<th style="width:6%;">外送網金額</th>','<th style="width:6%;">其他筆數/平均金額</th>','<th style="width:6%;">其他金額</th>']
+      ws1.append(['日期','星期','門市','營業額','內用筆數','內用金額','外帶筆數','外帶金額','電話筆數','電話金額','門市外送筆數','門市外送金額','外送網筆數','外送網金額','其他筆數','其他金額','筆數小計','平均客單價'])
+      title=['<th style="width:9%;">日期</th>','<th style="width:6%;">星期</th>','<th style="width:9%;">門市</th>','<th style="width:5%;">營業額</th>','<th style="width:5%;">內用筆數</th>','<th style="width:5%;">內用金額</th>'
+             ,'<th style="width:5%;">外帶筆數</th>','<th style="width:5%;" >外帶金額</th>','<th style="width:5%;">電話筆數</th>','<th style="width:5%;">電話金額</th>'
+    		 ,'<th style="width:5%;">外送筆數</th>','<th style="width:5%;">外送金額</th>','<th style="width:5%;">外送網筆數</th>','<th style="width:5%;">外送網金額</th>','<th style="width:5%;">其他筆數</th>','<th style="width:5%;">其他金額</th>','<th style="width:5%;">筆數小計</th>','<th style="width:5%;">平均客單價</th>']
       saletype=['內用','外帶','電話','外送','外送網','其他']
-      saledata1=[]
+      saledataq=[]#日期、門市、筆數小計、金額小計
+      tsale=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#各欄總計暫存
       if shop=='全部門市':
         shop=''
       else:
@@ -136,10 +138,10 @@ def layashopdata(request):
       for s in range(len(saletype)): 
         
         if 	saletype[s]=='外送網':
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no))+' / $'+ replace(convert(varchar,cast(convert(int,sum(sales_amount)/count(go_no)) as money),1),'.00','') as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no)) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
                          +" FROM [erpsPos].[dbo].[SHOP_orders] h ,[ERPSPOS].[dbo].[COMPANY] c,[erpsPos].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[COMP_NO]=h.sa_no and h.sa_no like 'l%' and p.[payments] not in ('現金','刷卡','悠遊卡','easycard')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,comp_name  order by sdate,comp_name  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no))+' / $'+ replace(convert(varchar,cast(convert(int,sum(sales_amount)/count(go_no)) as money),1),'.00','') as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no)) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
                          +" FROM [erpsPos].[dbo].[SHOP_orders] h ,[ERPSPOS].[dbo].[COMPANY] c,[erpsPos].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[COMP_NO]=h.sa_no and h.sa_no like 'l%' and p.[payments] not in ('現金','刷卡','悠遊卡','easycard')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,comp_name  order by sdate,comp_name  ")
           '''		
@@ -147,18 +149,18 @@ def layashopdata(request):
                         +"  and sdate >='"+sd+"' and sdate<= '"+ed+"'  and c.[COMP_NO]=h.sa_no "+shop+" group by sdate,c.COMP_NAME order by c.COMP_NAME,sdate")
           '''
         elif 	saletype[s]=='其他':
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no))+' / $'+ replace(convert(varchar,cast(convert(int,sum(sales_amount)/count(go_no)) as money),1),'.00','') as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no)) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
                          +" FROM [erpsPos].[dbo].[SHOP_orders] h ,[ERPSPOS].[dbo].[COMPANY] c,[erpsPos].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[COMP_NO]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('現金','刷卡','悠遊卡','easycard')"
                          +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,comp_name  order by sdate,comp_name  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no))+' / $'+ replace(convert(varchar,cast(convert(int,sum(sales_amount)/count(go_no)) as money),1),'.00','') as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no)) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
                          +" FROM [erpsPos].[dbo].[SHOP_orders] h ,[ERPSPOS].[dbo].[COMPANY] c,[erpsPos].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[COMP_NO]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('現金','刷卡','悠遊卡','easycard')"
                          +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,comp_name  order by sdate,comp_name  ")
           
         else:
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no))+' / $'+ replace(convert(varchar,cast(convert(int,sum(sales_amount)/count(go_no)) as money),1),'.00','') as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no)) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
                          +" FROM [erpsPos].[dbo].[SHOP_orders] h ,[ERPSPOS].[dbo].[COMPANY] c,[erpsPos].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[COMP_NO]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('現金','刷卡','悠遊卡','easycard')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,comp_name  order by sdate,comp_name  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no))+' / $'+ replace(convert(varchar,cast(convert(int,sum(sales_amount)/count(go_no)) as money),1),'.00','') as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,comp_name,convert(varchar,count(go_no)) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.COMP_NAME,h.go_no ,sales_amount,p.[payments] " 
                          +" FROM [erpsPos].[dbo].[SHOP_orders] h ,[ERPSPOS].[dbo].[COMPANY] c,[erpsPos].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[COMP_NO]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('現金','刷卡','悠遊卡','easycard')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,comp_name  order by sdate,comp_name  ")
           '''
@@ -168,35 +170,66 @@ def layashopdata(request):
         for d in temp211.fetchall():
           if s==0:		  
             saledata.append(['<td style="width:9%;">'+str(d[0])+'</td>','<td style="width:6%;">'+str(d[1])+'</td>','<td style="width:9%;">'+str(d[2])+'</td>','<td style="width:5%;" align="right">0</td>'
-                            ,'<td style="width:6%;" align="center" >'+str(d[3])+'</td>','<td style="width:6%;" align="right">'+format(int(d[4]),',')+'</td>','<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>'
-                            ,'<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>'
-							,'<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>','<td style="width:6%;" align="right">0</td>'])
+                            ,'<td style="width:5%;" align="center" >'+str(d[3])+'</td>','<td style="width:5%;" align="right">'+format(int(d[4]),',')+'</td>','<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="right">0</td>'
+                            ,'<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="center">0</td>','<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="right">0</td>'
+							,'<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="center">0</td>','<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="right">0</td>','<td style="width:5%;" align="right">0</td>'])
             f.write(str(s)+'\n')
-            saledatae.append([str(d[0]),str(d[1]),str(d[2]),'0',str((d[3])),format(int(d[4]),','),'0','0','0','0','0','0','0','0','0','0'])
-            saledata1.append([str(d[0]),str(d[2]),int(d[4])])
+            saledatae.append([str(d[0]),str(d[1]),str(d[2]),'0',str(d[3]),format(int(d[4]),','),'0','0','0','0','0','0','0','0','0','0','0','0'])
+            tsale[1]=int(tsale[1])+int(d[3])
+            tsale[2]=int(tsale[2])+int(d[4])
+            saledataq.append([str(d[0]),str(d[2]),int((d[3])),int(d[4])])
             f.write(str(d[0])+'/'+str(d[2])+'/'+str(d[4])+'\n')
           
           else:
-            #f.write(str(saledata1)+'\n')
-            for i in range(len(saledata1)):
-              if str(d[0])==saledata1[i][0] and str(d[2])==saledata1[i][1] :
-                saledata1[i][2]=saledata1[i][2]+int(d[4])
-                saledata[i][s+5+s-1]='<td style="width:6%;" align="center">'+str(d[3])+'</td>'
-                saledata[i][s+6+s-1]='<td style="width:6%;" align="right">'+format(int(d[4]),',')+'</td>'
-                saledatae[i][s+5+s-1]=str((d[3]))
+            for i in range(len(saledataq)):
+              if str(d[0])==saledataq[i][0] and str(d[2])==saledataq[i][1] :
+                saledataq[i][2]=saledataq[i][2]+int(d[3])
+                saledataq[i][3]=saledataq[i][3]+int(d[4])
+                saledata[i][s*2+4]='<td style="width:5%;" align="center">'+str(d[3])+'</td>'#因每類訂單有數量與金額二筆數字故 s*2 再因跳過表格前4欄再 +4
+                saledata[i][s*2+5]='<td style="width:5%;" align="right">'+format(int(d[4]),',')+'</td>'
+                saledatae[i][s*2+4]=str(d[3])
+                saledatae[i][s*2+5]=format(int(d[4]),',')
+                '''
+                saledata[i][s+5+s-1]='<td style="width:5%;" align="center">'+str(d[3])+'</td>'
+                saledata[i][s+6+s-1]='<td style="width:5%;" align="right">'+format(int(d[4]),',')+'</td>'
+                saledatae[i][s+5+s-1]=str(d[3])
                 saledatae[i][s+6+s-1]=format(int(d[4]),',')
-      f.write('saledata1'+'\n')
-      f.write(str(saledata1)+'\n')
-      f.write(str(len(saledata1))+'\n')
-      for i in range(len(saledata1)):
-        f.write(format(int(saledata1[i][2]),',')+'\n')
-        saledata[i][3]='<td style="width:9%;" align="right">'+format(int(saledata1[i][2]),',')+'</td>'
-        saledatae[i][3]=format(int(saledata1[i][2]),',')
-      #f.write(saledata+'\n')
+                '''
+                tsale[s*2+1]=tsale[s*2+1]+int(d[3])
+                tsale[s*2+2]=tsale[s*2+2]+int(d[4])
+      f.write(str((saledataq))+'\n')
+      for i in range(len(saledataq)):
+        saledata[i][3]='<td style="width:5%;" align="right">'+format(int(saledataq[i][3]),',')+'</td>'#該日總營業額
+        saledata[i][16]='<td style="width:5%;" align="center">'+format(int(saledataq[i][2]),',')+'</td>'#訂單數
+        saledata[i][17]='<td style="width:5%;" align="right">'+format(round(saledataq[i][3]/saledataq[i][2]),',')+'</td>'#客單價
+        saledatae[i][3]=format(int(saledataq[i][3]),',')
+        saledatae[i][16]=format(int(saledataq[i][2]),',')
+        saledatae[i][17]=format(round(saledataq[i][3]/saledataq[i][2]),',')
+        tsale[0]=tsale[0]+int(saledataq[i][3])
+        tsale[len(tsale)-2]=tsale[len(tsale)-2]+int(saledataq[i][2])#訂單數
+        #tsale[len(tsale)-1]=tsale[len(tsale)-1]+int(saledataq[i][3])
+      f.write(str(saledataq)+'\n')
+      tsale[len(tsale)-1]=round(tsale[0]/tsale[len(tsale)-2])#客單價
+      saledata.append(['<td style="width:9%;"></td>','<td style="width:6%;"></td>','<td style="width:9%;">小計</td>','<td style="width:5%;" align="right">'+format(tsale[0],',')+'</td>'
+                            ,'<td style="width:5%;" align="center" >'+str(tsale[1])+'</td>','<td style="width:5%;" align="right">'+format(tsale[2],',')+'</td>','<td style="width:5%;" align="center">'+str(tsale[3])+'</td>','<td style="width:5%;" align="right">'+format(tsale[4],',')+'</td>'
+                            ,'<td style="width:5%;" align="center">'+str(tsale[5])+'</td>','<td style="width:5%;" align="right">'+format(tsale[6],',')+'</td>','<td style="width:5%;" align="center">'+str(tsale[7])+'</td>','<td style="width:5%;" align="right">'+format(tsale[8],',')+'</td>'
+							,'<td style="width:5%;" align="center">'+str(tsale[9])+'</td>','<td style="width:5%;" align="right">'+format(tsale[10],',')+'</td>','<td style="width:5%;" align="center">'+format(int(tsale[11]),',')+'</td>','<td style="width:5%;" align="right">'+format(tsale[12],',')+'</td>'
+							,'<td style="width:5%;" align="center">'+format(tsale[13],',')+'</td>','<td style="width:5%;" align="right">'+format(tsale[14],',')+'</td>'])
+      
+      try:
+        
+        saledatae.append(['','','小計',format(tsale[0],','),str(tsale[1]),format(tsale[2],','),str(tsale[3]),format(tsale[4],','),str(tsale[5]),format(tsale[6],','),str(tsale[7]),format(tsale[8],','),str(tsale[9])
+	                   ,format(tsale[10],','),str(tsale[11]),format(tsale[12],','),str(tsale[13]),format(tsale[14],',')])
+        
+      except Exception as e:
+        f.write(e)	  
+      
+      f.write('test'+'\n')
       for e in range(len(saledatae)):
         ws1.append(saledatae[e])
       wb.save('C:\\Users\\Administrator\\chrisdjango\\MEDIA\\'+uno+'_拉亞直營營業額('+sday+'~'+eday+').xlsx')
       context['efilename']=uno+'_拉亞直營營業額('+sday+'~'+eday+').xlsx'
+    #銷售數量
     if ck2=='on':
       ws1.append(['拉亞直營銷售數量('+sday+'~'+eday+')'])
       ws1.append(['門市','大類','商品編號','商品名稱','銷售數量'])
@@ -220,7 +253,9 @@ def layashopdata(request):
         ws1.append([str(d[0]),str(d[1]),str(d[2]),str(d[3]),str(d[4])])
       
       wb.save('C:\\Users\\Administrator\\chrisdjango\\MEDIA\\'+uno+'_直營銷售數量('+sday+'~'+eday+').xlsx')
-      context['efilename']=uno+'_直營銷售數量('+sday+'~'+eday+').xlsx'    
+      context['efilename']=uno+'_直營銷售數量('+sday+'~'+eday+').xlsx'
+    #銷售量佔比
+    	
     context['sdata'] = saledata				
     context['title'] = title
   except:
