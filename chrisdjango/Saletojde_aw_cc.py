@@ -125,18 +125,19 @@ def IBron (ono,today): #活動商品分單處理
         value=tsql[dtl[l]]
         f1.write(str(value)+'\n')
         Ino+=1
-        f1.write("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
-                      +",SZAN8,SZSHAN,SZTRDJ,SZRSDJ,SZLITM,SZLOCN,SZLNTY,SZNXTR,SZLTTR,SZUOM,SZUORG,SZVR01 ) "
-                      +" VALUES ('2','"+str(Ino)+"','00100','"+CNOS+"','E1','"+str(Ino)+"000','850','"+tdate+"','R','N','00100','S2'"
-                      +",'"+str(Ino)+"000','"+Branch_Plan+"','00100','00100','"+CNOS+"','E1','"+str(Ino)+"000','"+aid+"','"+aid+"','"+odate+"','"+adate
-                      +"','"+value[0]
-                      +"','','','','','',"+value[1]+",'"+CNOS+"')"+'\n')
-        ORADB=CONORACLE("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
-                      +",SZAN8,SZSHAN,SZTRDJ,SZRSDJ,SZLITM,SZLOCN,SZLNTY,SZNXTR,SZLTTR,SZUOM,SZUORG,SZVR01 ) "
-                      +" VALUES ('2','"+str(Ino)+"','00100','"+CNOS+"','E1','"+str(Ino)+"000','850','"+tdate+"','R','N','00100','S2'"
-                      +",'"+str(Ino)+"000','"+Branch_Plan+"','00100','00100','"+CNOS+"','E1','"+str(Ino)+"000','"+aid+"','"+aid+"','"+odate+"','"+adate
-                      +"','"+value[0]
-                      +"','','','','','',"+value[1]+",'"+CNOS+"')")
+        if value[1]!='0':  #20200817 修改數量0不入單出貨 
+          f1.write("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
+                        +",SZAN8,SZSHAN,SZTRDJ,SZRSDJ,SZLITM,SZLOCN,SZLNTY,SZNXTR,SZLTTR,SZUOM,SZUORG,SZVR01 ) "
+                        +" VALUES ('2','"+str(Ino)+"','00100','"+CNOS+"','E1','"+str(Ino)+"000','850','"+tdate+"','R','N','00100','S2'"
+                        +",'"+str(Ino)+"000','"+Branch_Plan+"','00100','00100','"+CNOS+"','E1','"+str(Ino)+"000','"+aid+"','"+aid+"','"+odate+"','"+adate
+                        +"','"+value[0]
+                        +"','','','','','',"+value[1]+",'"+CNOS+"')"+'\n')
+          ORADB=CONORACLE("INSERT INTO "+OR_ID+".F47012(SZEDTY,SZEDSQ,SZEKCO,SZEDOC,SZEDCT,SZEDLN,SZEDST,SZEDDT,SZEDER,SZEDSP,SZKCOO,SZDCTO,SZLNID,SZMCU,SZCO,SZOKCO,SZOORN,SZOCTO,SZOGNO"
+                        +",SZAN8,SZSHAN,SZTRDJ,SZRSDJ,SZLITM,SZLOCN,SZLNTY,SZNXTR,SZLTTR,SZUOM,SZUORG,SZVR01 ) "
+                        +" VALUES ('2','"+str(Ino)+"','00100','"+CNOS+"','E1','"+str(Ino)+"000','850','"+tdate+"','R','N','00100','S2'"
+                        +",'"+str(Ino)+"000','"+Branch_Plan+"','00100','00100','"+CNOS+"','E1','"+str(Ino)+"000','"+aid+"','"+aid+"','"+odate+"','"+adate
+                        +"','"+value[0]
+                        +"','','','','','',"+value[1]+",'"+CNOS+"')")
   f1.close()
 def set2jde(tday):
   f=open('c:\\set2jde111.txt','w')
