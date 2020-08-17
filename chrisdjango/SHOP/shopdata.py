@@ -147,10 +147,10 @@ def layashopdata(request):
       for s in range(len(saletype)): 
         
         if 	saletype[s]=='Uber':
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('Uber','UberEats')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('Uber','UberEats')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
           '''		
@@ -158,26 +158,26 @@ def layashopdata(request):
                         +"  and sdate >='"+sd+"' and sdate<= '"+ed+"'  and c.[COMP_NO]=h.sa_no "+shop+" group by sdate,c.COMP_NAME order by c.COMP_NAME,sdate")
           '''
         elif 	saletype[s]=='foodpanda':
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('FoodPanda','熊貓')"
                          +" and h.go_no=p.go_no   and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('FoodPanda','熊貓')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
           
         elif 	saletype[s]=='其他':
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3   and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
           
         else:
-          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
-          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(sales_amount) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,sales_amount,p.[payments] " 
+          temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
                          +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
         f.write('temp211'+'\n')
