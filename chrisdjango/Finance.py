@@ -208,7 +208,7 @@ def F43121item(request):
 		# 				 +sitemq2+eitemq2+" ORDER BY pran8,prrcdj,prdoc,prlnid  "))
 	
         		
-        serdata=CONORACLE("select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,f431.pddsc1,f431.pddsc2,prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
+        serdata=CONORACLE("select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,Replace (f431.pddsc1,'=',''),Replace (f431.pddsc2,'=',''),prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
 	                    +"(select f43.prdoco,f43.prdoc,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f43.prrcdj,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f43.prrcdj,4,3)-1,'yyyymmdd'))) AS prrcdj"
                         +",f01.abalph,f43.prglc,f41.imglpt,f41.imlitm,f41.imsrtx,f41.imdsc1,f41.imdsc2,f43.prqtypy/10000 as prqtypy ,round(f43.prprrc/10000,4) as price,(f43.praopn) praopn,(f43.prarec) prarec,case WHEN prtxa1='VT' THEN round((f43.prarec)*0.05) ELSE 0 END tax "
                         #+",case WHEN prtxa1='VT' THEN (f43.prarec)+round((f43.prarec)*0.05)  ELSE (f43.prarec) END otatal,f43.prlnid,f43.pran8 from f43121 f43,f0101 f01,f4101 f41 where prdgl >='"+sd+"' and prdgl <= '"+ed+"'  and f43.pran8 = '"+compno+"' "
@@ -221,7 +221,7 @@ def F43121item(request):
                         +"and F431.pdan8 "+scompno+"  union all "
                         #case WHEN f431.pdUORG/10000 >0 then round(f431.pdaopn/(f431.pdUORG/10000),2) else 0 end as price
                         +"select  f431.pddoco,f431.pdDOCC,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f431.pddgl,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f431.pddgl,4,3)-1,'yyyymmdd'))) "
-                        +"AS prdgl,f01.abalph,f431.pdglc,f41.imglpt,f41.imlitm,f41.imsrtx,f431.pddsc1,f431.pddsc2,f431.pdUORG/10000,round(f431.pdprrc/10000,4) as price,f431.pdaopn,f431.pdarec+f431.pdaopn "
+                        +"AS prdgl,f01.abalph,f431.pdglc,f41.imglpt,f41.imlitm,f41.imsrtx,Replace (f431.pddsc1,'=',''),Replace (f431.pddsc2,'=',''),f431.pdUORG/10000,round(f431.pdprrc/10000,4) as price,f431.pdaopn,f431.pdarec+f431.pdaopn "
                         +",case WHEN pdtxa1='VT' THEN round((f431.pdarec)*0.05+(f431.pdaopn)*0.05)  ELSE 0 END  tax ,case WHEN pdtxa1='VT' THEN (f431.pdarec+f431.pdaopn)+round((f431.pdarec)*0.05+(f431.pdaopn)*0.05)  ELSE (f431.pdarec+f431.pdaopn) END otatal,f431.PDlnid,F431.pdan8 "
 						+" from f4311 f431,f0101 f01,f4101 f41 where f431.pddcto='O5' "
 						#+"AND f431.pddoco||f431.pdlnid||f431.pdan8  IN (SELECT PRDOCO||PRLNID||PRAN8 FROM F43121 WHERE prdgl >='"+sd+"'  and prdgl <= '"+ed+"' AND PRDCTO='O5' AND PRDCTO='O5' AND PRMATC=2 )"					
@@ -254,7 +254,7 @@ def F43121item(request):
         #                 +"and F431.pdan8 "+scompno+"  and f01.aban8=F431.pdan8 and f41.imlitm=F431.pdlitm "
 		# 				 +sitemq2+eitemq2+" ORDER BY pran8,prrcdj,prdoc,prlnid  "))
 		
-        serdata=CONORACLE("select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,f431.pddsc1,f431.pddsc2,prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
+        serdata=CONORACLE("select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,Replace (f431.pddsc1,'=',''),Replace (f431.pddsc2,'=',''),prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
 	                    +"(select f43.prdoco,f43.prdoc,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f43.prrcdj,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f43.prrcdj,4,3)-1,'yyyymmdd'))) AS prrcdj"
                         +",f01.abalph,f43.prglc,f41.imglpt,f41.imlitm,f41.imsrtx,f41.imdsc1,f41.imdsc2,f43.prqtypy/10000 as prqtypy ,round(f43.prprrc/10000,4) as price,(f43.praopn) praopn,(f43.prarec) prarec,case WHEN prtxa1='VT' THEN round((f43.prarec)*0.05) ELSE 0 END tax "
                         +",case WHEN prtxa1='VT' THEN (f43.prarec)+round((f43.prarec)*0.05)  ELSE (f43.prarec) END otatal,f43.prlnid,f43.pran8 from f43121 f43,f0101 f01,f4101 f41 where prrcdj >='"+sd+"' and prrcdj <= '"+ed+"'  and f43.pran8  "+scompno+" "
@@ -266,7 +266,7 @@ def F43121item(request):
                         +"and F431.pdan8 "+scompno+"  union all "
                         +"select  f431.pddoco,f431.pdDOCC,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f431.pddgl,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f431.pddgl,4,3)-1,'yyyymmdd'))) "
                         #case WHEN f431.pdUORG/10000 >0 then round(f431.pdaopn/(f431.pdUORG/10000),2) else 0 end as price
-                        +"AS prdgl,f01.abalph,f431.pdglc,f41.imglpt,f41.imlitm,f41.imsrtx,f431.pddsc1,f431.pddsc2,f431.pdUORG/10000,round(f431.pdprrc/10000,4) as price,f431.pdaopn,f431.pdarec+f431.pdaopn "
+                        +"AS prdgl,f01.abalph,f431.pdglc,f41.imglpt,f41.imlitm,f41.imsrtx,Replace (f431.pddsc1,'=',''),Replace (f431.pddsc2,'=',''),f431.pdUORG/10000,round(f431.pdprrc/10000,4) as price,f431.pdaopn,f431.pdarec+f431.pdaopn "
                         +",case WHEN pdtxa1='VT' THEN round((f431.pdarec)*0.05+(f431.pdaopn)*0.05)  ELSE 0 END  tax ,case WHEN pdtxa1='VT' THEN (f431.pdarec+f431.pdaopn)+round((f431.pdarec)*0.05+(f431.pdaopn)*0.05)  ELSE (f431.pdarec+f431.pdaopn) END otatal,f431.PDlnid,F431.pdan8 "
 						+" from f4311 f431,f0101 f01,f4101 f41 where f431.pddcto='O5' "
 						#+"AND f431.pddoco||f431.pdlnid||f431.pdan8 NOT IN (SELECT PRDOCO||PRLNID||PRAN8 FROM F43121 WHERE prdgl >='"+sd+"'  and prdgl <= '"+ed+"' )"						
@@ -309,7 +309,7 @@ def F43121item(request):
         #                 +"and F431.pdan8 "+scompno+"  and f01.aban8=F431.pdan8 and f41.imlitm=F431.pdlitm "
  		# 				 +sitemq2+eitemq2+" ORDER BY pran8,prrcdj,prdoc,prlnid "))
 		
-        serdata=CONORACLE("select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,f431.pddsc1,f431.pddsc2,prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
+        serdata=CONORACLE("select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,Replace (f431.pddsc1,'=',''),Replace (f431.pddsc2,'=',''),prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
 	                    +"(select f43.prdoco,f43.prdoc,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f43.prrcdj,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f43.prrcdj,4,3)-1,'yyyymmdd'))) AS prrcdj"
                         +",f01.abalph,f43.prglc,f41.imglpt,f41.imlitm,f41.imsrtx,f41.imdsc1,f41.imdsc2,f43.prqtypy/10000 as prqtypy ,round(f43.prprrc/10000,4) as price,(f43.praopn) praopn,(f43.prarec) prarec,case WHEN prtxa1='VT' THEN round((f43.prarec)*0.05) ELSE 0 END tax "
                         +",case WHEN prtxa1='VT' THEN (f43.prarec)+round((f43.prarec)*0.05)  ELSE (f43.prarec) END otatal,f43.prlnid,f43.pran8 from f43121 f43,f0101 f01,f4101 f41 where prrcdj >='"+sd+"' and prrcdj <= '"+ed+"'  and f43.pran8 "+scompno+" "
@@ -320,7 +320,7 @@ def F43121item(request):
 						+"f4311 f431 on f431.pddoco=a.prdoco and F431.pdlitm=a.imlitm and f431.pdlnid=a.prlnid  "
                         +"and F431.pdan8 "+scompno+" union all "
         
-                        +"select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,f431.pddsc1,f431.pddsc2,prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
+                        +"select prdoco,prdoc,prrcdj,abalph,prglc,imglpt,imlitm,imsrtx,Replace (f431.pddsc2,'=',''),Replace (f431.pddsc2,'=',''),prqtypy,price,praopn,prarec,tax,otatal ,prlnid,pran8 from "
                         +"(select f43.prdoco,f43.prdoc,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f43.prrcdj,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f43.prrcdj,4,3)-1,'yyyymmdd'))) AS prrcdj"
                         #case when f43.prqtypy/10000>0 then round(f43.prarec/(f43.prqtypy/10000),2) else 0 end as price
                         +",f01.abalph,f43.prglc,f41.imglpt,f41.imlitm,f41.imsrtx,f41.imdsc1,f41.imdsc2,f43.prqtypy/10000 as prqtypy ,round(f43.prprrc/10000,4) as price,(f43.praopn) praopn,(f43.prarec) prarec,case WHEN prtxa1='VT' THEN round((f43.prarec)*0.05) ELSE 0 END tax "
@@ -333,7 +333,7 @@ def F43121item(request):
                         +"and F431.pdan8 "+scompno+" union all "#case WHEN f431.pdUORG/10000 >0 then round(f431.pdaopn/(f431.pdUORG/10000),2) else 0 end as price
         
                         +"select  f431.pddoco,f431.pdDOCC,TO_CHAR(TO_NUMBER(TO_CHAR(TO_DATE('20'||SUBSTR(f431.pddgl,2,2)||'-01-01','yyyy-mm-dd')+SUBSTR(f431.pddgl,4,3)-1,'yyyymmdd'))) "
-                        +"AS prdgl,f01.abalph,f431.pdglc,f41.imglpt,f41.imlitm,f41.imsrtx,f431.pddsc1,f431.pddsc2,f431.pdUORG/10000,round(f431.pdprrc/10000,4) as price,f431.pdaopn,f431.pdarec+f431.pdaopn "
+                        +"AS prdgl,f01.abalph,f431.pdglc,f41.imglpt,f41.imlitm,f41.imsrtx,Replace (f431.pddsc1,'=',''),Replace (f431.pddsc2,'=',''),f431.pdUORG/10000,round(f431.pdprrc/10000,4) as price,f431.pdaopn,f431.pdarec+f431.pdaopn "
                         +",case WHEN pdtxa1='VT' THEN round((f431.pdarec)*0.05+(f431.pdaopn)*0.05)  ELSE 0 END  tax ,case WHEN pdtxa1='VT' THEN (f431.pdarec+f431.pdaopn)+round((f431.pdarec)*0.05+(f431.pdaopn)*0.05)  ELSE (f431.pdarec+f431.pdaopn) END otatal,f431.PDlnid,F431.pdan8 "
 						+" from f4311 f431,f0101 f01,f4101 f41 where f431.pddcto='O5' " 
 						#+" and (f43.prdoco||f43.prlnid||f43.pran8 not in (select prdoco||prlnid||pran8 from f43121 x where x.prrcdj >='"+sd+"' and x.prrcdj <= '"+ed+"' and x.prmatc=2 AND x.prdcto=f43.prdcto AND x.prmatc=f43.prmatc and x.prdoco=f43.prdoco and x.prlnid=f43.prlnid and x.pran8=f43.pran8 ))"
