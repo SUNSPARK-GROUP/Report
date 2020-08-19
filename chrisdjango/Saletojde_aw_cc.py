@@ -241,6 +241,11 @@ def set2jde(tday):
   #cur206hd.execute("SELECT [GO_NO],[ID_CUST],[NM_C],[TOTAMT],[REMARK] FROM WEBORDERHD WHERE ISNULL(APPLYDATE,'')='"+sdate+"'  AND (len(NO_SM)<1 or  NO_SM  is null) and id_cust<>'appdv' ORDER BY ID_CUST,GO_NO ") 
   #cur206hd.execute("SELECT [GO_NO],[ID_CUST],[NM_C],[TOTAMT],[REMARK] FROM WEBORDERHD WHERE GO_NO='WS20191200289' ORDER BY ID_CUST,GO_NO ")
   #f.write("1. select order_no,AccountID,StoreName,Double_1,Remark from  orderformpos  where  NO_SM='未轉單' and ArrivalTime like '"+sdate+"%'"+'\n')
+  ccdmod.execute("select id_item,Remark from  ibron  where  master='C'")
+  for cs in ccdmod :
+    ccdmodt.execute("update orderformpos_prod_sub set ProdID='"+str(cs[1])+"' where order_no in (select order_no from  orderformpos  where  NO_SM='未轉單' and ArrivalTime like '"+sdate+"%') and ProdID='"+str(cs[0])+"'")
+    #ccdmodt.execute("update orderformpos_prod_sub set ProdID='"+str(cs[1])+"' where order_no in ('2020081914044213133') and ProdID='"+str(cs[0])+"'")
+    chaincodet.commit()
   ccdmod.execute("select order_no,AccountID,StoreName,Double_1,Remark from  orderformpos  where  NO_SM='未轉單' and ArrivalTime like '"+sdate+"%'")
   try:
     for sales in ccdmod :
