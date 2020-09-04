@@ -148,10 +148,10 @@ def layashopdata(request):
         
         if 	saletype[s]=='Uber':
           f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('Uber','UberEats')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('Uber','UberEats')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
           temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('Uber','UberEats')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('Uber','UberEats')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
           '''		
           temp211.execute("SELECT h.sdate,DATENAME(Weekday, h.sdate) as wd,c.COMP_NAME,count(go_no) as cs ,sum([TOTO1]) as ts FROM [LayaPos].[dbo].[OUTARTHD] h ,[ERPSPOS].[dbo].[COMPANY] c where go_no not like '%*'  and [deskparent]='"+saletype[s]+"'" 
@@ -159,26 +159,26 @@ def layashopdata(request):
           '''
         elif 	saletype[s]=='foodpanda':
           f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('FoodPanda','熊貓')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('FoodPanda','熊貓')"
                          +" and h.go_no=p.go_no   and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
           temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments]  in ('FoodPanda','熊貓')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('FoodPanda','熊貓')"
                          +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
           
         elif 	saletype[s]=='其他':
           f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
           temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3   and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3   and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
           
         else:
           f.write("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  "+'\n')
           temp211.execute("select sdate,DATENAME(Weekday, sdate) as wd,SNAME,count(go_no) as cs ,sum(price) as ts from (SELECT convert(varchar(10),h.invoice_date,120) as sdate,c.SNAME,h.go_no ,p.price,p.[payments] " 
-                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'l%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
                          +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by sdate,SNAME  order by sdate,SNAME  ")
         f.write('temp211'+'\n')
           
@@ -261,26 +261,32 @@ def layashopdata(request):
     #銷售數量
     if ck2=='on':
       ws1.append(['拉亞直營銷售數量('+sday+'~'+eday+')'])
-      ws1.append(['門市','大類','商品編號','商品名稱','銷售數量'])
-      title=['<th style="width:20%;">門市</th>','<th style="width:10%;">大類</th>','<th style="width:20%;">商品編號</th>','<th style="width:35%;">商品名稱</th>'
-	           ,'<th style="width:15%;">銷售數量</th>']
+      ws1.append(['門市','大類','名稱','商品編號','商品名稱','銷售數量'])
+      title=['<th style="width:10%;">門市</th>','<th style="width:10%;">大類</th>','<th style="width:10%;">名稱</th>','<th style="width:20%;">商品編號</th>','<th style="width:40%;">商品名稱</th>'
+	           ,'<th style="width:20%;">銷售數量</th>']
       if shop=='全部門市':
         shop=''
       else:
         shop="and d.sa_no='"+shop+"'"
-      temp211.execute("SELECT c.SNAME ,[Category] ,[Product_ID] ,[Product_Name] ,sum(convert(int,[Quantity])) as qty  FROM [POSSA].[dbo].[SHOP_detail] d ,[POSSA].[dbo].[SHOP] c "
-                       +" where  c.[SID]=d.sa_no  and d.invoice_date >= '"+sd+" 00:00:00' and d.invoice_date <='"+ed+" 23:59:59'"+shop+"  group by  c.SNAME ,[Category] ,[Product_ID] ,[Product_Name] "
+      f.write("SELECT c.SNAME ,[Category],F.NAME ,[Product_ID] ,[Product_Name] ,sum(convert(int,[Quantity])) as qty  FROM [POSSA].[dbo].[SHOP_detail] d ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].[FKIND] F "
+                       +" where SA_NO like 'la%' and c.[SID]=d.sa_no  and d.invoice_date >= '"+sd+" 00:00:00' and d.invoice_date <='"+ed+" 23:59:59'"+shop+" AND f.ID=d.[Category]   group by  c.SNAME ,[Category] ,[Product_ID] ,[Product_Name] ,F.NAME"
+					   +"order by [Category]")
+      temp211.execute("SELECT c.SNAME ,[Category],F.NAME ,[Product_ID] ,[Product_Name] ,sum(convert(int,[Quantity])) as qty  FROM [POSSA].[dbo].[SHOP_detail] d ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].[FKIND] F "
+                       +" where SA_NO like 'la%' and c.[SID]=d.sa_no  and d.invoice_date >= '"+sd+" 00:00:00' and d.invoice_date <='"+ed+" 23:59:59'"+shop+" AND f.ID=d.[Category]   group by  c.SNAME ,[Category] ,[Product_ID] ,[Product_Name] ,F.NAME "
 					   +"order by [Category]")
       
       for d in temp211.fetchall():
-        saledata.append(['<td style="width:20%;">'+str(d[0])+'</td>','<td style="width:10%;">'+str(d[1])+'</td>','<td style="width:20%;">'+str(d[2])+'</td>','<td style="width:35%;" >'+str(d[3])+'</td>'
-                          ,'<td style="width:15%;"  align="right">'+str(d[4])+'</td>'])
-        ws1.append([str(d[0]),str(d[1]),str(d[2]),str(d[3]),str(d[4])])
+        saledata.append(['<td style="width:10%;">'+str(d[0])+'</td>','<td style="width:10%;">'+str(d[1])+'</td>','<td style="width:10%;">'+str(d[2])+'</td>','<td style="width:20%;">'+str(d[3])+'</td>','<td style="width:40%;" >'+str(d[4])+'</td>'
+                          ,'<td style="width:20%;"  align="right">'+str(d[5])+'</td>'])
+        ws1.append([str(d[0]),str(d[1]),str(d[2]),str(d[3]),str(d[4]),str(d[5])])
       
       wb.save('C:\\Users\\Administrator\\chrisdjango\\MEDIA\\'+uno+'_直營銷售數量('+sday+'~'+eday+').xlsx')
       context['efilename']=uno+'_直營銷售數量('+sday+'~'+eday+').xlsx'
-    #銷售量佔比
-    	
+    #時段金額
+    #if ck3=='on':
+
+
+	
     context['sdata'] = saledata				
     context['title'] = title
   except:
