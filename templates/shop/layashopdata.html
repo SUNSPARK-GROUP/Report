@@ -76,19 +76,20 @@ function getcbox(ck){
 <input id="ck1" name="Checkbox1" type="checkbox"  style="font-size:16px"  onclick="getcbox('ck1')">
 {% endif %}
 <label id="Label1">銷售金額</label>
+{% if ck == 'ck3' %}
+<input id="ck3" name="Checkbox3" type="checkbox" checked="" style="font-size:16px" onclick="getcbox('ck3')">
+{% else %}
+<input id="ck3" name="Checkbox3" type="checkbox"  style="font-size:16px" onclick="getcbox('ck3')">
+{% endif %}
+<label  style="font-weight:bold;font-size:16px;color:#CC0000">時段金額</label> 
+
 {% if ck == 'ck2' %}
 <input id="ck2" name="Checkbox2" type="checkbox" checked="" style="font-size:16px" onclick="getcbox('ck2')">
 {% else %}
 <input id="ck2" name="Checkbox2" type="checkbox"  style="font-size:16px" onclick="getcbox('ck2')">
 {% endif %}
 <label  style="font-weight:bold;font-size:16px;color:#CC0000">銷售數量</label>
-<!--
-{% if ck == 'ck3' %}
-<input id="ck3" name="Checkbox3" type="checkbox" checked="" style="font-size:16px" onclick="getcbox('ck3')">
-{% else %}
-<input id="ck3" name="Checkbox3" type="checkbox"  style="font-size:16px" onclick="getcbox('ck3')">
-{% endif %}
-<label  style="font-weight:bold;font-size:16px;color:#CC0000">類別數量佔比</label> -->
+
     <label  style="font-weight:bold;font-size:16px;color:#0099FF">{{dept}}</label></label>
 </p>
     <!--input name="2EXCEL" type="submit" style="font-size:16px;color:#0000AA" value="匯出EXCEL" ><-->

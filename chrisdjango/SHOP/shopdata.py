@@ -83,7 +83,7 @@ def showday(wd,sp,dt):#wd->0 today,wd->1 yesterday,wd->-1 tomorrow sp->Divider d
     return d.strftime('%d'+sp+'%m'+sp+'%Y')#%Y->2015 %y->15
   else :
     return d.strftime('%Y'+sp+'%m'+sp+'%d')#%Y->2015 %y->15
-def cper (slist,sno,n):
+def cper (slist,sno,n):#slist原data sno指定欄位list,n分母數在原data取值欄位
   for tt in range(len(sno)) :        
     if slist[sno[tt]-1]==0:
       slist[sno[tt]]=0
@@ -124,8 +124,13 @@ def layashopdata(request):
       context['ck'] ='ck2'
     except:
       ck2='off'
-    saledata=[]
-    saledatae=[]
+    try:
+      ck3=request.GET['Checkbox3']
+      context['ck'] ='ck3'
+    except:
+      ck3='off'
+    saledata=[]#web data
+    saledatae=[]#excel data
     wb = Workbook()	
     ws1 = wb.active	
     ws1.title = "data"
@@ -283,7 +288,138 @@ def layashopdata(request):
       wb.save('C:\\Users\\Administrator\\chrisdjango\\MEDIA\\'+uno+'_直營銷售數量('+sday+'~'+eday+').xlsx')
       context['efilename']=uno+'_直營銷售數量('+sday+'~'+eday+').xlsx'
     #時段金額
-    #if ck3=='on':
+    if ck3=='on':
+      ws1.append(['拉亞直營時段營業額('+sday+'~'+eday+')'])
+      ws1.append(['門市','時段','營業額','內用筆數','內用金額','佔比','外帶筆數','外帶金額','佔比','電話筆數','電話金額','佔比','門市外送筆數','門市外送金額','佔比','Uber筆數','Uber金額','佔比','熊貓筆數','熊貓金額','佔比','其他筆數','其他金額','佔比','筆數小計','平均客單價'])
+      title=['<th style="width:112px;">門市</th>','<th style="width:60px;"  align="center" >時段</th>','<th style="width:40px;">營業額</th>','<th style="width:40px;">內用筆數</th>','<th style="width:40px;">內用金額</th>','<th style="width:40px;">佔比</th>'
+             ,'<th style="width:40px;">外帶筆數</th>','<th style="width:40px;" >外帶金額</th>','<th style="width:40px;">佔比</th>','<th style="width:40px;">電話筆數</th>','<th style="width:40px;">電話金額</th>','<th style="width:40px;">佔比</th>','<th style="width:40px;">外送筆數</th>','<th style="width:40px;">外送金額</th>','<th style="width:40px;">佔比</th>'
+			 ,'<th style="width:40px;">Uber筆數</th>','<th style="width:40px;">Uber金額</th>','<th style="width:40px;">佔比</th>','<th style="width:40px;">熊貓筆數</th>','<th style="width:40px;">熊貓金額</th>','<th style="width:40px;">佔比</th>','<th style="width:40px;">其他筆數</th>','<th style="width:40px;">其他金額</th>','<th style="width:40px;">佔比</th>'
+			 ,'<th style="width:40px;">筆數小計</th>','<th style="width:40px;">平均客單價</th>']
+      saletype=['內用','外帶','電話','外送','Uber','foodpanda','其他']
+      saledataq=[]#日期、門市、筆數小計、金額小計
+      tsale=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]#各欄總計暫存
+      if shop=='全部門市':
+        shop="and h.sa_no like 'LA%'"
+      else:
+        shop="and h.sa_no='"+shop+"'"
+      for s in range(len(saletype)): 
+        f.write(saletype[s]+'\n')
+        if 	saletype[s]=='Uber':
+          f.write("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('Uber','UberEats')"
+                         +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2) "+'\n')
+          temp211.execute("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('Uber','UberEats')"
+                         +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2) ")
+          '''		
+          temp211.execute("SELECT h.sdate,DATENAME(Weekday, h.sdate) as wd,c.COMP_NAME,count(go_no) as cs ,sum([TOTO1]) as ts FROM [LayaPos].[dbo].[OUTARTHD] h ,[ERPSPOS].[dbo].[COMPANY] c where go_no not like '%*'  and [deskparent]='"+saletype[s]+"'" 
+                        +"  and sdate >='"+sd+"' and sdate<= '"+ed+"'  and c.[COMP_NO]=h.sa_no "+shop+" group by sdate,c.COMP_NAME order by c.COMP_NAME,sdate")
+          '''
+        elif 	saletype[s]=='foodpanda':
+          f.write("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('FoodPanda','熊貓')"
+                         +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2) "+'\n')
+          temp211.execute("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments]  in ('FoodPanda','熊貓')"
+                         +" and h.go_no=p.go_no  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2) ")
+          
+        elif 	saletype[s]=='其他':
+          f.write("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3   and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2)  "+'\n')
+          temp211.execute("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3   and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" and h.go_no=p.go_no and h.Serve_Type not in('內用','外帶','電話','外送')  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2)  ")
+          
+        else:
+          f.write("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2) "+'\n')
+          temp211.execute("select SNAME,substring(convert(varchar, invoice_date,108),1,2) as times,count(go_no) as cs ,sum(price) as ts from (SELECT h.invoice_date,c.SNAME,h.go_no ,p.price,p.[payments] " 
+                         +" FROM [POSSA].[dbo].[SHOP_orders] h ,[POSSA].[dbo].[SHOP] c,[POSSA].[dbo].SHOP_PAYMENTS p where h.status=3  and c.[SID]=h.sa_no and h.sa_no like 'la%' and p.[payments] not  in ('FoodPanda','熊貓','Uber','UberEats')"
+                         +" and h.go_no=p.go_no and h.Serve_Type='"+saletype[s]+"'  and h.invoice_date >= '"+sd+" 00:00:00' and h.invoice_date <='"+ed+" 23:00:00' "+shop+") a  group by substring(convert(varchar, invoice_date,108),1,2),SNAME  order by SNAME ,substring(convert(varchar, invoice_date,108),1,2) ")
+        f.write('temp211'+'\n')
+          
+        for d in temp211.fetchall():
+          if s==0:		  
+            saledata.append(['<td style="width:60px;"  align="center">'+str(d[0])+'</td>','<td style="width:60px;"  align="center">'+str(d[1])+'</td>','<td style="width:40px;" align="right">0</td>'
+                            ,'<td style="width:40px;" align="center" >'+str(d[2])+'</td>','<td style="width:40px;" align="right">'+format(int(d[3]),',')+'</td>','<td style="width:40px;" align="right">0</td>'
+							,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>','<td style="width:40px;" align="right">0</td>'
+                            ,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>','<td style="width:40px;" align="right">0</td>'
+							,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>','<td style="width:40px;" align="right">0</td>'
+							,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>','<td style="width:40px;" align="right">0</td>'
+							,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>','<td style="width:40px;" align="right">0</td>'
+							,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>','<td style="width:40px;" align="right">0</td>'
+							,'<td style="width:40px;" align="center">0</td>','<td style="width:40px;" align="right">0</td>'])
+            #f.write(str(s)+'\n')
+            saledatae.append([str(d[0]),str(d[1]),'0',d[2],int(d[3]),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+            #f.write(str(saledatae))
+            tsale[1]=int(tsale[1])+int(d[2])
+            tsale[2]=int(tsale[2])+int(d[3])
+            saledataq.append([str(d[0]),str(d[1]),int((d[2])),int(d[3])])
+            #f.write(str(d[0])+'/'+str(d[1])+'/'+str(d[3])+'\n')
+          
+          else:
+            for i in range(len(saledataq)):
+              if str(d[0])==saledataq[i][0] and str(d[1])==saledataq[i][1] :
+                saledataq[i][2]=saledataq[i][2]+int(d[2])
+                saledataq[i][3]=saledataq[i][3]+int(d[3])
+                #f.write('saledata-len:'+str(len(saledata))+str(saledata))
+                saledata[i][s*3+3]='<td style="width:40px;" align="center">'+str(d[2])+'</td>'#因每類訂單有數量與金額二筆數字故 s*2 再因跳過表格前3欄再 +3
+                saledata[i][s*3+4]='<td style="width:40px;" align="right">'+format(int(d[3]),',')+'</td>'
+                saledatae[i][s*3+3]=int(d[2])
+                saledatae[i][s*3+4]=int(d[3])                
+                tsale[s*3+1]=tsale[s*3+1]+int(d[2])
+                tsale[s*3+2]=tsale[s*3+2]+int(d[3])
+      
+      	  
+      for i in range(len(saledataq)):
+        saledata[i][2]='<td style="width:40px;" align="right">'+format(int(saledataq[i][3]),',')+'</td>'#該時段總營業額
+        saledata[i][24]='<td style="width:40px;" align="center">'+format(int(saledataq[i][2]),',')+'</td>'#訂單數
+        saledata[i][25]='<td style="width:40px;" align="right">'+format(round(saledataq[i][3]/saledataq[i][2]),',')+'</td>'#客單價
+        saledatae[i][2]=saledataq[i][3]
+        saledatae[i][24]=saledataq[i][2]
+        saledatae[i][25]=round(saledataq[i][3]/saledataq[i][2])
+        tsale[0]=tsale[0]+saledataq[i][3]
+        tsale[len(tsale)-2]=tsale[len(tsale)-2]+saledataq[i][2]#訂單數
+        #tsale[len(tsale)-1]=tsale[len(tsale)-1]+int(saledataq[i][3])
+      #f.write(str(saledataq)+'\n')
+      tsale[len(tsale)-1]=round(tsale[0]/tsale[len(tsale)-2])#客單價
+      tg=[3,6,9,12,15,18,21]
+      #f.write(str(tsale))
+      
+      
+      '''
+      tsale=cper(tsale,tg,0)
+      #f.write(str(tsale))
+      saledata.append(['<td style="width:60px;"></td>','<td style="width:60px;"></td>','<td style="width:112px;">小計</td>','<td style="width:40px;" align="right">'+format(tsale[0],',')+'</td>'
+                       ,'<td style="width:40px;" align="center" >'+str(tsale[1])+'</td>','<td style="width:40px;" align="right">'+format(tsale[2],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[3])+'</td>'
+					   ,'<td style="width:40px;" align="center">'+str(tsale[4])+'</td>','<td style="width:40px;" align="right">'+format(tsale[5],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[6])+'</td>'
+                       ,'<td style="width:40px;" align="center">'+str(tsale[7])+'</td>','<td style="width:40px;" align="right">'+format(tsale[8],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[9])+'</td>'
+					   ,'<td style="width:40px;" align="center">'+str(tsale[10])+'</td>','<td style="width:40px;" align="right">'+format(tsale[11],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[12])+'</td>'
+                       ,'<td style="width:40px;" align="center">'+str(tsale[13])+'</td>','<td style="width:40px;" align="right">'+format(tsale[14],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[15])+'</td>'
+					   ,'<td style="width:40px;" align="center">'+format(int(tsale[16]),',')+'</td>','<td style="width:40px;" align="right">'+format(tsale[17],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[18])+'</td>'
+                       ,'<td style="width:40px;" align="center">'+format(tsale[19],',')+'</td>','<td style="width:40px;" align="right">'+format(tsale[20],',')+'</td>','<td style="width:40px;" align="right">'+str(tsale[21])+'</td>'
+					   ,'<td style="width:40px;" align="center">'+format(tsale[22],',')+'</td>','<td style="width:40px;" align="right">'+format(tsale[23],',')+'</td>'])
+      
+      try:
+        saledatae.append(['','','小計',tsale[0],tsale[1],tsale[2],tsale[3],tsale[4],tsale[5],tsale[6],tsale[7],tsale[8],tsale[9],tsale[10],tsale[11],tsale[12],tsale[13],tsale[14],tsale[15],tsale[16],tsale[17],tsale[18],tsale[19],tsale[20],tsale[21],tsale[22],tsale[23]])
+        
+      except Exception as e:  
+        f.write(e)	  
+      '''
+      #f.write(str(saledatae)+'\n')
+      for e in range(len(saledatae)):#計算佔比
+        tg=[5,8,11,14,17,20,23]
+        #f.write(str(saledatae[e])+'\n')
+        saledatae[e]=cper(saledatae[e],tg,2)
+        #f.write(str(saledatae[e])+'\n')        
+        for ht in range(len(tg)):
+          saledata[e][tg[ht]]='<td style="width:40px;" align="center">'+str(saledatae[e][tg[ht]])+'</td>'        
+        ws1.append(saledatae[e])
+      #f.write(str(saledatae)+'\n')  
+      wb.save('C:\\Users\\Administrator\\chrisdjango\\MEDIA\\'+uno+'_拉亞直營時段營業額('+sday+'~'+eday+').xlsx')
+      context['efilename']=uno+'_拉亞直營時段營業額('+sday+'~'+eday+').xlsx'
 
 
 	
