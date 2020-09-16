@@ -310,7 +310,7 @@ def taketojde(eipno,version):#物料領用/歸還項目轉入JDE
       PQOH = '-1'
       LOCN = ' '
       wlocn = CONORACLE("Select IMITM,IMLITM,LIITM,LIMCU,LILOCN,LIPQOH,IMUOM1 FROM PRODDTA.F4101,PRODDTA.F41021 where IMITM = LIITM and IMLITM = '"+str(itns)+"' and"
-      +" LIMCU = '        A001'")
+      +" LIMCU = '        A001' AND LIPBIN ='P'")
       # f.write(str(wlocn) + '\n')
       # f.write(str(itns)+'\n')
       DSC2 = '料號錯誤'
