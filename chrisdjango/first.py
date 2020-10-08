@@ -874,11 +874,11 @@ def weborderdetel_cc(request):
       else:
         context['CK4']='off'
     context['vagqty']='0'
-    '''
+    
     ccdmod.execute("select SUM(QTY) as q from   webbookingorder  where id_cust='"+context['cid']+"' and resale='N' ")
     for q in ccdmod:
       context['vagqty']=str(int(q[0]))
-    '''	  
+      
     #cur206order.execute("select a.new_iditem,a.nm_item,fl.[QTY],fl.[UPRICE],fl.[SUBTOT]  FROM [TGSalary].[dbo].[WEBORDERFL] fl,[TGSalary].[dbo].[webart] a where fl.go_no='"+gono+"' and a.id_item=fl.id_item  order by  a.new_iditem ") 
     ccdmod.execute("select ProdID,ProdName,Amount,Double_1,Double_2 from orderformpos_prod_sub where  order_no='"+gono+"' order by ProdID")
     #f.write("select ProdID,ProdName,Amount,Double_1,Double_2 from orderformpos_prod_sub where  order_no='"+gono+"'"+'\n')
