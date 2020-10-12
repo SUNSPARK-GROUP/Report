@@ -792,7 +792,7 @@ def weborderdetel(request):
   return render(request, 'weborderdetel.html',context )#傳入參數
 def weborderdetel_cc(request):
   context= {}
-  #f=open(r'C:\Users\chris\chrisdjango\error.txt','w')
+  f=open(r'C:\Users\chris\chrisdjango\error.txt','w')
   try:
     Sweborderfl=[]
     weborderfl=[]#頁簽內容	
@@ -819,7 +819,7 @@ def weborderdetel_cc(request):
     #connection206=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.206;DATABASE=TGSalary;UID=apuser;PWD=0920799339')
     #cur206order = connection206.cursor()
     chaincodedb=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
-    ccdmod = chaincodedb.cursor()	
+    ccdmod = chaincodedb.cursor()    	
     #f.write('ccdmod ok'+'\n')
     if editb=='merge':
       context['mergomess']=ordermerge(cid,aday)
@@ -832,7 +832,7 @@ def weborderdetel_cc(request):
       else:
         #cur206order.execute("update [TGSalary].[dbo].[WEBORDERHD] set applydate='"+aday+"' where go_no='"+gono+"'")
         #f.write("update orderformpos set ArrivalTime='"+aday+" 00:00:00',NO_SM='未轉單' where order_no='"+gono+"'"+'\n')
-        ccdmod.execute("update orderformpos set ArrivalTime='"+aday+" 00:00:00',NO_SM='未轉單' where order_no='"+gono+"' ")
+        ccdmod.execute("update orderformpos set ArrivalTime='"+aday+" 00:00:00',NO_SM='未轉單' where order_no='"+gono+"' and  NO_SM='未轉單' ")
         chaincodedb.commit()
       if umo=='true':
         #cur206order.execute("update [TGSalary].[dbo].[WEBORDERHD] set applydate='"+aday+"',REMARK=REMARK+'*非正配單*' where go_no='"+gono+"'")
@@ -853,7 +853,7 @@ def weborderdetel_cc(request):
       #f.write("chaincodedb.commit()"+'\n')
       chaincodedb.commit()
     recount=0
-    #cur206order.execute("select [GO_NO],[id_cust],[nm_c],[TOTAMT],[APPLYDATE],[remark],[SDATETIME],[no_sm] from [TGSalary].[dbo].[WEBORDERHD] where go_no='"+gono+"'") 
+   
     #f.write("select order_no,AccountID,StoreName,Double_1,ArrivalTime,Remark,DateTime_1,no_sm from orderformpos where order_no='"+gono+"'"+'\n')	
     ccdmod.execute("select order_no,AccountID,StoreName,Double_1,ArrivalTime,Remark,DateTime_1,no_sm,NormalDelivery from orderformpos where order_no='"+gono+"'")
     for h in ccdmod:
@@ -872,7 +872,11 @@ def weborderdetel_cc(request):
       if str(h[8]).find('非正配單')>-1:
         context['CK4']='on'
       else:
-        context['CK4']='off'		
+        context['CK4']='off'
+    context['vagqty']='0'
+    ccdmod.execute("select SUM(QTY) as q from   webbookingorder  where id_cust='"+context['cid']+"' and resale='N' ")
+    for q in ccdmod:
+      context['vagqty']=str(int(q[0]))    	  
     #cur206order.execute("select a.new_iditem,a.nm_item,fl.[QTY],fl.[UPRICE],fl.[SUBTOT]  FROM [TGSalary].[dbo].[WEBORDERFL] fl,[TGSalary].[dbo].[webart] a where fl.go_no='"+gono+"' and a.id_item=fl.id_item  order by  a.new_iditem ") 
     ccdmod.execute("select ProdID,ProdName,Amount,Double_1,Double_2 from orderformpos_prod_sub where  order_no='"+gono+"' order by ProdID")
     #f.write("select ProdID,ProdName,Amount,Double_1,Double_2 from orderformpos_prod_sub where  order_no='"+gono+"'"+'\n')
@@ -907,7 +911,7 @@ def weborderdetel_cc(request):
     nday=showday(0,'-',0) #今天日期
     context['Sday'] = nday
     context['Eday'] = nday
-  #f.close()
+  f.close()
   return render(request, 'weborderdetel_cc.html',context )#傳入參數 
 def pccss(request):  
   return render(request, 'pc.css', )
