@@ -403,8 +403,8 @@ def set2jde(tday):
           f.write(str(sale[5])+'\n')
           if str(sale[5]).find('非正配單')==-1 and ordershop.get(cid)!='Y':#20191115
           
-            f.write("9. SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"'"
-                            +" union all "
+            f.write("9. SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"' and ProdID not in (SELECT  id_item  FROM WEBBookingART) "
+                            +" and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y')  union all "
                             +" select 'order_no',a.ID_ITEM,a.NM_ITEM,sum(a.QTY) as QTY,a.UPRICE,sum(a.SUBTOT) as SUBTOT ,a.ID_ITEM ,''  from  (SELECT * FROM WEBBookingOrder "
                             +" WHERE applydate<='"+t_str+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID"+'\n')
             ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"' and ProdID not in (SELECT  id_item  FROM WEBBookingART) "
@@ -413,8 +413,10 @@ def set2jde(tday):
                             +" WHERE applydate<='"+t_str+"' and ID_CUST='"+cid+"' and resale='N' )A group by  a.ID_ITEM,a.NM_ITEM,a.UPRICE   order by ProdID")
             inbooking=1
           else:
-            f.write("9-1. SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"'"+'\n')
-            ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') order by ProdID")
+            f.write("9-1.SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no
+			+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') and ProdID not in (SELECT  id_item  FROM WEBBookingART) order by ProdID"+'\n')
+            ccdmodfl.execute("SELECT order_no,ProdID,ProdName,Amount,Double_1,Double_2,ProdID as ProdID1,'' FROM orderformpos_prod_sub  where order_no='"+go_no
+			+"' and ProdID not in (SELECT ID_ITEM FROM IBRON WHERE  MASTER='Y') and ProdID not in (SELECT  id_item  FROM WEBBookingART) order by ProdID")
             inbooking=0
           I12=0
           for sitem in ccdmodfl:
@@ -465,7 +467,7 @@ def set2jde(tday):
             f.write(" UPDATE WEBBookingOrder set  resale='Y' WHERE applydate<='"+t_str+"' and ID_CUST='"+cid+"' and resale='N' "+'\n')
             ccdmodt.execute(" UPDATE WEBBookingOrder set  resale='Y' WHERE applydate<='"+t_str+"' and ID_CUST='"+cid+"' and resale='N' ")
             chaincodet.commit()
-            ordershop[cid]='Y'
+            ordershop[cid]='Y'#預防同一批次同一門市有第2張訂單，會把前一單的預購商品轉入
   except:
     f.close()  
   f.close()
