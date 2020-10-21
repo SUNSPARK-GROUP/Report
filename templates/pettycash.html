@@ -152,6 +152,7 @@ function check_all(obj,cName)
     var checkboxs = document.getElementsByName(cName);
     for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;}
 }
+
 </script>
 <div style="height: 30px;">
 <label>
@@ -182,7 +183,7 @@ function check_all(obj,cName)
 
 </div>
     <div style="height: 30px;">
-      <button type="Submit" id="Submit1" name="Submit1" value="查詢" style="font-size:16px;color:#0000AA" >EIP查詢</button>
+      <button type="Submit" id="Submit1" name="Submit1" value="查詢" style="font-size:16px;color:#0000AA"; >EIP查詢</button>
       
       <label id="msl1" style="font-size:16px;color:#0099FF">{{mess}}</label>
       
@@ -192,7 +193,7 @@ function check_all(obj,cName)
 <div id="div1">
 <form id="takeitem" method="post">
   <section style="float:left;height:533px; ">
-    <button type="Submit" id="Submit1" name="Submit1" value="轉入" style="font-size:16px;color:#0000AA"  onclick="check(this.form)">EIP轉入</button>
+    <button type="Submit" id="Submit2" name="Submit2" value="轉入" style="font-size:16px;color:#0000AA;" onclick="">EIP轉入</button>
     <table id="eipdata"  class="showdata">
       <caption>
       {{reportmes|safe}}
