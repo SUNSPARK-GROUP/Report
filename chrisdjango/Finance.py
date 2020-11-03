@@ -27,6 +27,17 @@ import datetime
 
 depts=[]
 accls=[]
+def CONMSSQL214(sqlstr):
+    connection214 = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.214;DATABASE=ERPS;UID=apuser;PWD=0920799339')
+    cursor = connection214.cursor()
+    cursor.execute(sqlstr)
+    SQLSTRS = sqlstr[0:6].upper()
+    if SQLSTRS == "SELECT":
+        TotalSession = cursor.fetchall()
+        return TotalSession
+        cursor.close()
+    else:
+        connection214.commit()
 def CONMYSQL(sqlstr):
  #  f=open(r'C:\Users\Administrator\Desktop\txtlog\CONMYSQL.txt','w')
   db = pymysql.connect(host='192.168.0.210', port=3306, user='apuser', passwd='0920799339', db='main_eipplus_standard',charset='utf8')
@@ -1264,7 +1275,9 @@ def EIPPAY2JDE(eipid):#零用金轉JDE
   # OR_DATAID='CRPDTA'#測試區
   OR_DATAID='PRODDTA'#正式區
   #f = open(r'C:\Users\Administrator\Desktop\txtlog\EIPPAY2JDE.txt','w')
+  # f = open(r'C:\Users\Edward\Desktop\txtlog\EIPPAY2JDE.txt','w')
   
+
   VNEDUS=[]
   context={}
   connection214=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.214;DATABASE=erps;UID=apuser;PWD=0920799339')
@@ -1276,6 +1289,7 @@ def EIPPAY2JDE(eipid):#零用金轉JDE
   VNEDBT=int(VNEDBT)
   VNEDBT+=1
   for s in range(len(eipid)):
+         
     ser=CONMYSQL("SELECT formsflow_passby FROM hplus_formsflow h where h.formsflow_id = '"+str(eipid[s])+"'")
     for e in ser:
       mans=str(e[0]).split(')(')
@@ -1290,224 +1304,227 @@ def EIPPAY2JDE(eipid):#零用金轉JDE
   c = 0 #項次計數器
   sumtpay = [] # 算出轉入總金額 
   for r in range(len(eipid)):
-    ser=CONMYSQL("SELECT h.formsflow_id,h.formsflow_version,right(h.formsflow_display,'7') display FROM hplus_formsflow h where h.formsflow_id = '"+str(eipid[r])+"'")
-    for s in ser:    
-      #data=CONMYSQL("SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'1',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%1%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'2',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%2%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'3',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%3%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'4',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%4%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'5',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%5%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'6',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%6%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'7',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%7%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'8',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%8%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%')")
-      data=CONMYSQL("SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'1',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%1%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'2',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%2%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'3',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%3%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'4',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%4%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'5',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%5%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'6',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%6%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'7',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%7%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'8',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%8%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%')")
-      
-      # f.write(str("SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'1',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%1%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'2',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%2%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'3',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%3%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'4',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%4%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'5',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%5%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'6',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%6%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'7',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%7%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'8',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%8%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%')"))
-	  
-      VNEDDT =''
-      VNDGJ  =''
-      VNOBJ  =''
-      NSUB   =''
-      VNTORG =''
-      Name   =''
-      invITEM ={} # eipid 表單的發票 張數
-      invITEM2 ={} #比對 同張發票最後一行是哪個
-      TAXs = {} #稅金
-      #VNEXR 擷取字串用
-      VNEXRstr = str(s[2]) 
-      for d in data:
-        mstr = d[0]
-        json= eval(mstr)
-         #分支沒有空值(' ')才跑資料
-        if json['__group'] != ' ':
-           #行號
-          c += 1
-          i = c * 1000  
-           #分支
-          VNMCU = json['__group']
-           #會科.子目
-          item  = json['__item']
-          items=str(item).split('.',1)
-          try:#若分割的右邊值不存在，會進行例外執行
-             #會科
-            VNOBJ=str(items[0])
-             #子目
-            NSUB = str(items[1])      
-          except:
-            VNOBJ =str(item)
-            NSUB = '  '
-            #分支.會科.子目
-          VNANI=VNMCU+'.'+item
-           #現在日期
-          cur214hd.execute("SELECT '1'+SUBSTRING(CONVERT(char(10), getdate(), 112),3,2)+RIGHT(REPLICATE('0','3') + CAST(datepart(dayofyear,CONVERT(char(10), getdate(), 112)) as NVARCHAR)  , 3) AS JDE")
-          for yy in cur214hd:
-            VNEDDT=yy[0]
-           #申請日期
-          # day   = json['__date'] 
-           #申請原因  
-          txt   = json['__dep']  
-           #總帳日期 - 轉JDE格式
-          glday = json['__gldate'] 
-          cur214hd.execute("SELECT '1'+SUBSTRING('"+ str(glday) +"',3,2)+RIGHT(REPLICATE('0','3') + CAST(datepart(dayofyear,'" + str(glday) + "') as NVARCHAR)  , 3) AS JDE")
-          for xx in cur214hd:
-            VNDGJ = xx[0]
-           # 使用者帳號_ID
-          name = json['__name']
-          serchname=CONMYSQL('SELECT empno,empname FROM hplus_special where account_id = "'+str(name)+'"')
-          for serch in serchname:
-             # 工號
-            VNTORG = str(serch[0])
-             # 姓名
-            Name = str(serch[1])
-          VNEXR = Name + txt
-           #字串超過30截斷
-          VNEXR=VNEXR[0:30]
-          VNAA = json['__ntp']
-          if VNAA == ' ':
-            VNAA ='0'
-          # json['__p']
-          # json['__paydate']
-          paymethod = json['__paymethod']
-          # json['__sign']
-          # json['__tp']
-          tpa = json['__tpa']    
-          if tpa == ' ':
-            tpa ='0'  
+    #重複就不執行
+    rep_xx = CONMSSQL214("SELECT count(*) FROM  [ERPS].[dbo].[eipfreturnlist] WHERE eip_id = '"+str(eipid[r])+"'")
 
-          #f.write(
-          #"INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
-          #" VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
-          #"VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
-          #"'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"','"+VNANI+"','"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
-          #",'"+str(NSUB)+"','"+str(VNAA)+"','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+str(VNTORG)+"','"+str(VNTORG)+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+str(VNAA)+"')"+'\n'
-          #)
-  
-          CONORACLE(
-          "INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
-          " VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
-          "VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
-          "'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"','"+VNANI+"','"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
-          ",'"+str(NSUB)+"','"+str(VNAA)+"','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+str(VNTORG)+"','"+str(VNTORG)+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+str(VNAA)+"')"+'\n'
-          )
+    if str(rep_xx[0][0]) == '0':
+      ser=CONMYSQL("SELECT h.formsflow_id,h.formsflow_version,right(h.formsflow_display,'7') display FROM hplus_formsflow h where h.formsflow_id = '"+str(eipid[r])+"'")
+      for s in ser:   
 
-          invTAX = json['__TAX'] #發票
-          TAXCASH = json['__t'] # 稅金
-           #發票None不處理
-          if invTAX != ' ': 
-             #稅金加總
-            getTAX = TAXs.get(invTAX)
-            if getTAX != None:
-              TaxSum = getTAX
-              TaxTotal = int(TaxSum) + int(TAXCASH)
-              del TAXs[invTAX]
-              TAXs.setdefault(invTAX,TaxTotal)
-            else:
-              TAXs.setdefault(invTAX,TAXCASH)
-
-             #判斷發票比對次數 
-            getinvITEM2 = invITEM2.get(invTAX)
-            if getinvITEM2 != None:
-               #發票重複的次數
-              invITEM2_COUNT = int(getinvITEM2)
-              invITEM2_COUNT += 1
-               #處理後刪除 KEY 後面再塞入值
-              del invITEM2[invTAX]
-              invITEM2.setdefault(invTAX,invITEM2_COUNT)
-            else:
-               #是None就塞1
-              invITEM2.setdefault(invTAX,1)
-             #查詢 同張發票出現的次數
-            inv = CONMYSQL("SELECT formsflow_field_value, COUNT(*) FROM hplus_formsflow_field WHERE  formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND formsflow_field_name LIKE '__TAX%' AND formsflow_field_value > '' AND formsflow_field_value = '"+ invTAX +"' GROUP BY formsflow_field_value")
-            for zz in inv:
-              invITEM.setdefault(zz[0],zz[1])
-
-            inv1 = invITEM.get(invTAX)  #同張單發票重複的次數
-            inv2 = invITEM2.get(invTAX) #發票重複第幾次
-            TAXTO = TAXs.get(invTAX)     #稅金總金額
-
-             #筆數對應成功後塞入稅金
-            if inv1 == inv2:
-              
-               # eipid分別增加稅金
-               #行號
-              c += 1
-              i = c * 1000 
-                 #會計科目固定
-              VNANI = '      100000.1257        '
-              VNMCU = '      100000'
-              VNOBJ = '1257'
-              VNSUB = ''
-                #稅金總數
-                 
-              TAX = TAXTO
-              if TAX == ' ':
-                TAX = '0'
-            
-                 #  #說明-變更
-                  
-              VNEXR = invTAX
-              VNEXR=VNEXR[0:30]
-                
-              #f.write(
-              #"INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
-              #" VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
-              #"VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
-              #"'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
-              #",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(TAX)+"')"+'\n'
-              #)
+        #data=CONMYSQL("SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'1',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%1%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'2',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%2%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'3',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%3%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'4',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%4%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'5',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%5%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'6',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%6%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'7',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%7%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'8',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%8%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%')")
+        data=CONMYSQL("SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'1',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%1%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'2',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%2%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'3',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%3%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'4',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%4%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'5',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%5%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'6',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%6%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'7',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%7%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'8',''),''':''', replace(replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),'//',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%8%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%')")
         
-              CONORACLE(
-               "INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
-               " VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
-               "VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
-               "'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
-               ",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(TAX)+"')"+'\n'
-              )
-          
-     #負項  eipid分別增加負項
-     #行號
-     
-    c += 1
-    i = c * 1000 
-     #會科分割 如:   100000.1101.002  分成三等份 100000 = VNMCU,1101 =VNOBJ,002=VNSUB
-    VNANI =  paymethod
-    index1 = int(VNANI.find('.'))
-    index2 = int(VNANI.find('.',index1+1))
-       
-    VNMCU = VNANI[0:6]
-    VNOBJ = VNANI[index1+1:index2]
-    #沒有子目
-    if index2 != -1: 
-      VNSUB = VNANI[index2+1:]
-    else:
-      VNSUB = ' '
+        # f.write(str("SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'1',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%1%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'2',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%2%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'3',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%3%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'4',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%4%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'5',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%5%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'6',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%6%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'7',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%7%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%') UNION ALL SELECT CONCAT('{',GROUP_CONCAT('''',replace(formsflow_field_name,'8',''),''':''', replace(replace(if(formsflow_field_value ='' OR formsflow_field_value is null  ,' ',formsflow_field_value),',',''),'''',''),''''),'}') FROM hplus_formsflow_field A WHERE 1=1 AND formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND ((formsflow_field_name LIKE '__%8%' OR formsflow_field_name IN('__date','__gldate','__paydate','__paymethod','__tpa','__name'))AND formsflow_field_name NOT LIKE '__幣別%' AND formsflow_field_name NOT LIKE '__foreign%' AND formsflow_field_name NOT LIKE '__km%' AND formsflow_field_name NOT LIKE '__google%' AND formsflow_field_name NOT LIKE 'AR0%')"))
       
-     #總數變負數
-    tpay = (int(tpa))*-1
+        VNEDDT =''
+        VNDGJ  =''
+        VNOBJ  =''
+        NSUB   =''
+        VNTORG =''
+        Name   =''
+        invITEM ={} # eipid 表單的發票 張數
+        invITEM2 ={} #比對 同張發票最後一行是哪個
+        TAXs = {} #稅金
+        #VNEXR 擷取字串用
+        VNEXRstr = str(s[2]) 
+        for d in data:
+          mstr = d[0]
+          json= eval(mstr)
+          #分支沒有空值(' ')才跑資料
+          if json['__group'] != ' ':
+            #行號
+            c += 1
+            i = c * 1000  
+            #分支
+            VNMCU = json['__group']
+            #會科.子目
+            item  = json['__item']
+            items=str(item).split('.',1)
+            try:#若分割的右邊值不存在，會進行例外執行
+              #會科
+              VNOBJ=str(items[0])
+              #子目
+              NSUB = str(items[1])      
+            except:
+              VNOBJ =str(item)
+              NSUB = '  '
+              #分支.會科.子目
+            VNANI=VNMCU+'.'+item
+            #現在日期
+            cur214hd.execute("SELECT '1'+SUBSTRING(CONVERT(char(10), getdate(), 112),3,2)+RIGHT(REPLICATE('0','3') + CAST(datepart(dayofyear,CONVERT(char(10), getdate(), 112)) as NVARCHAR)  , 3) AS JDE")
+            for yy in cur214hd:
+              VNEDDT=yy[0]
+            #申請日期
+            # day   = json['__date'] 
+            #申請原因  
+            txt   = json['__dep']  
+            #總帳日期 - 轉JDE格式
+            glday = json['__gldate'] 
+            cur214hd.execute("SELECT '1'+SUBSTRING('"+ str(glday) +"',3,2)+RIGHT(REPLICATE('0','3') + CAST(datepart(dayofyear,'" + str(glday) + "') as NVARCHAR)  , 3) AS JDE")
+            for xx in cur214hd:
+              VNDGJ = xx[0]
+            # 使用者帳號_ID
+            name = json['__name']
+            serchname=CONMYSQL('SELECT empno,empname FROM hplus_special where account_id = "'+str(name)+'"')
+            for serch in serchname:
+              # 工號
+              VNTORG = str(serch[0])
+              # 姓名
+              Name = str(serch[1])
+            VNEXR = Name + txt
+            #字串超過30截斷
+            VNEXR=VNEXR[0:30]
+            VNAA = json['__ntp']
+            if VNAA == ' ':
+              VNAA ='0'
+            # json['__p']
+            # json['__paydate']
+            paymethod = json['__paymethod']
+            # json['__sign']
+            # json['__tp']
+            tpa = json['__tpa']    
+            if tpa == ' ':
+              tpa ='0'  
 
-    sumtpay.append(int(tpa)) #抓出每個表單的總金額
+            #f.write(
+            #"INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
+            #" VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
+            #"VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
+            #"'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"','"+VNANI+"','"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
+            #",'"+str(NSUB)+"','"+str(VNAA)+"','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+str(VNTORG)+"','"+str(VNTORG)+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+str(VNAA)+"')"+'\n'
+            #)
+    
+            CONORACLE(
+            "INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
+            " VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
+            "VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
+            "'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"','"+VNANI+"','"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
+            ",'"+str(NSUB)+"','"+str(VNAA)+"','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+str(VNTORG)+"','"+str(VNTORG)+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+str(VNAA)+"')"+'\n'
+            )
 
-     #說明-變更
-    VNEXR = "支付"+ VNEXRstr +str(Name)+"費用申請"  
-    VNEXR=VNEXR[0:30]
-      #---------------------------------------
-       
-    #f.write(
-    #"INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
-    #" VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
-    #"VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
-    #"'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
-    #",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(tpay)+"')"+'\n'
-    #)
-    CONORACLE(
-     "INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
-     " VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
-     "VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
-     "'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
-     ",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(tpay)+"')"+'\n'
-    )
+            invTAX = json['__TAX'] #發票
+            TAXCASH = json['__t'] # 稅金
+            #發票None不處理
+            if invTAX != ' ': 
+              #稅金加總
+              getTAX = TAXs.get(invTAX)
+              if getTAX != None:
+                TaxSum = getTAX
+                TaxTotal = int(TaxSum) + int(TAXCASH)
+                del TAXs[invTAX]
+                TAXs.setdefault(invTAX,TaxTotal)
+              else:
+                TAXs.setdefault(invTAX,TAXCASH)
+
+              #判斷發票比對次數 
+              getinvITEM2 = invITEM2.get(invTAX)
+              if getinvITEM2 != None:
+                #發票重複的次數
+                invITEM2_COUNT = int(getinvITEM2)
+                invITEM2_COUNT += 1
+                #處理後刪除 KEY 後面再塞入值
+                del invITEM2[invTAX]
+                invITEM2.setdefault(invTAX,invITEM2_COUNT)
+              else:
+                #是None就塞1
+                invITEM2.setdefault(invTAX,1)
+              #查詢 同張發票出現的次數
+              inv = CONMYSQL("SELECT formsflow_field_value, COUNT(*) FROM hplus_formsflow_field WHERE  formsflow_field_formsflow = '"+str(s[0])+"' AND formsflow_field_version = '"+str(s[1])+"' AND formsflow_field_name LIKE '__TAX%' AND formsflow_field_value > '' AND formsflow_field_value = '"+ invTAX +"' GROUP BY formsflow_field_value")
+              for zz in inv:
+                invITEM.setdefault(zz[0],zz[1])
+
+              inv1 = invITEM.get(invTAX)  #同張單發票重複的次數
+              inv2 = invITEM2.get(invTAX) #發票重複第幾次
+              TAXTO = TAXs.get(invTAX)     #稅金總金額
+
+              #筆數對應成功後塞入稅金
+              if inv1 == inv2:
+                
+                # eipid分別增加稅金
+                #行號
+                c += 1
+                i = c * 1000 
+                  #會計科目固定
+                VNANI = '      100000.1257        '
+                VNMCU = '      100000'
+                VNOBJ = '1257'
+                VNSUB = ''
+                  #稅金總數
+                  
+                TAX = TAXTO
+                if TAX == ' ':
+                  TAX = '0'
+              
+                  #  #說明-變更
+                    
+                VNEXR = invTAX
+                VNEXR=VNEXR[0:30]
+                  
+                #f.write(
+                #"INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
+                #" VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
+                #"VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
+                #"'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
+                #",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(TAX)+"')"+'\n'
+                #)
+          
+                CONORACLE(
+                "INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
+                " VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
+                "VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
+                "'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
+                ",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(TAX)+"')"+'\n'
+                )
+            
+      #負項  eipid分別增加負項
+      #行號
+      
+      c += 1
+      i = c * 1000 
+      #會科分割 如:   100000.1101.002  分成三等份 100000 = VNMCU,1101 =VNOBJ,002=VNSUB
+      VNANI =  paymethod
+      index1 = int(VNANI.find('.'))
+      index2 = int(VNANI.find('.',index1+1))
+        
+      VNMCU = VNANI[0:6]
+      VNOBJ = VNANI[index1+1:index2]
+      #沒有子目
+      if index2 != -1: 
+        VNSUB = VNANI[index2+1:]
+      else:
+        VNSUB = ' '
+        
+      #總數變負數
+      tpay = (int(tpa))*-1
+
+      sumtpay.append(int(tpa)) #抓出每個表單的總金額
+
+      #說明-變更
+      VNEXR = "支付"+ VNEXRstr +str(Name)+"費用申請"  
+      VNEXR=VNEXR[0:30]
+        #---------------------------------------
+        
+      #f.write(
+      #"INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
+      #" VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
+      #"VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
+      #"'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
+      #",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(tpay)+"')"+'\n'
+      #)
+      CONORACLE(
+      "INSERT INTO "+OR_DATAID+".F0911Z1(VNEDSQ,VNEDTN,VNEDER,VNEDDL,VNEDSP,VNEDTC,VNEDTR,VNEDAN,VNCO,VNAM,VNLT,VNPN,VNCTRY,VNCRCD,VNCRR,VNHCRR,VNODOC,"+
+      " VNAN8,VNALTV,VNIVD,VNLNID,VNWY,VNWN,VNOPSQ,VNDOI,VNPID,VNJOBN,VNCRRM,VNEXR1,VNTXA1,VNTXITM,VNEDUS,VNEDLN,VNEDDT,VNEDBT,VNDGJ,VNANI,VNMCU,VNOBJ,VNSUB,VNAA,VNEXA,VNEXR,"+
+      "VNTORG,VNUSER,VNUPMJ,VNUPMT,VNSTAM,VNAG) VALUES ('0','1','B','0','0','A','J','0','00100','2', 'AA','0','20','TWD','0','0','0','0','0','0','0','0','0','100','0',"+
+      "'EP0911Z1 ','JDEWEB  ','D','  ','          ','0','"+VNEDUS[0]+"','"+str(i)+"','"+str(VNEDDT)+"','"+str(VNEDBT)+"','"+str(VNDGJ)+"' ,'"+str(VNANI)+"' ,'"+str(VNMCU)+"','"+str(VNOBJ)+"'"+
+      ",'"+str(VNSUB)+"','0','EIP拋轉Oracle費用傳票','"+str(VNEXR)+"','"+VNEDUS[0]+"','"+VNEDUS[0]+"','"+str(VNEDDT)+"','"+str(Dtime)+"','0','"+ str(tpay)+"')"+'\n'
+      )
 
 
 
-     # ISERT 資料到 MSSQL 
-    connection214=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.214;DATABASE=erps;UID=apuser;PWD=0920799339')
-    cur214hd = connection214.cursor()
-    cur214hd.execute("INSERT INTO [ERPS].[dbo].[eipfreturnlist](eip_id,tdate,rbatch)VALUES('"+str(eipid[r])+"',CONVERT(varchar,GETDATE(),112),'"+ str(VNEDBT) +"')")
-    connection214.commit()
-
+      # ISERT 資料到 MSSQL 
+      CONMSSQL214("INSERT INTO [ERPS].[dbo].[eipfreturnlist](eip_id,tdate,rbatch)VALUES('"+str(eipid[r])+"',CONVERT(varchar,GETDATE(),112),'"+ str(VNEDBT) +"')")
+    else:
+      context['mess']='重複點選按鈕'
   sumtpay1 = str(sum(sumtpay))
   return sumtpay1
   # f.close()
