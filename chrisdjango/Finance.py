@@ -1275,7 +1275,7 @@ def EIPPAY2JDE(eipid):#零用金轉JDE
   # OR_DATAID='CRPDTA'#測試區
   OR_DATAID='PRODDTA'#正式區
   #f = open(r'C:\Users\Administrator\Desktop\txtlog\EIPPAY2JDE.txt','w')
-  f = open(r'C:\Users\Edward\Desktop\txtlog\EIPPAY2JDE.txt','w')
+  # f = open(r'C:\Users\Edward\Desktop\txtlog\EIPPAY2JDE.txt','w')
   
 
   VNEDUS=[]
@@ -1525,7 +1525,7 @@ def EIPPAY2JDE(eipid):#零用金轉JDE
       context['mess']='重複點選按鈕'
   sumtpay1 = str(sum(sumtpay))
   return sumtpay1
-  f.close()
+  # f.close()
 def saleTotal(request): #客戶銷售總表
 #   f = open(r'C:\Users\Administrator\Desktop\txtlog\saleTotal.txt','w')
   F43121=[]
