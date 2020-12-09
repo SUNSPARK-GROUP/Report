@@ -191,9 +191,9 @@ function check_all(obj,cName)
   </form>
 </header>
 <div id="div1">
-<form id="takeitem" method="post">
+<form name=form3 id="takeitem" method="post">
   <section style="float:left;height:533px; ">
-    <button type="Submit" id="Submit2" name="Submit2" value="轉入" style="font-size:16px;color:#0000AA;" onclick="">EIP轉入</button>
+    <button type="Submit" id="Submit2" name="Submit2" value="轉入" style="font-size:16px;color:#0000AA;" onclick="javascript:{this.disabled=true;document.form3.submit();}" >EIP轉入</button>
     <table id="eipdata"  class="showdata">
       <caption>
       {{reportmes|safe}}
