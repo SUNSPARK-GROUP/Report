@@ -98,5 +98,5 @@ def handler500(request):
     response = render(request, 'ERROR404.html')
     response.status_code = 500
     return response  
-'''
+'''  
 # Create your views here.
