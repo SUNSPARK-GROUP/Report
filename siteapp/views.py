@@ -87,5 +87,16 @@ def submenu(sid,uid):
     subll={'fid':str(sm[0]),'sname':str(sm[1]),'url':str(sm[2])}
     sublist.append(subll)
   return sublist
-  
+'''
+def handler404(request):
+    response = render(request, 'ERROR404.html')
+    response.status_code = 404
+    return response
+
+
+def handler500(request):
+    response = render(request, 'ERROR404.html')
+    response.status_code = 500
+    return response  
+'''
 # Create your views here.

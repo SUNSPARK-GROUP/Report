@@ -24,11 +24,15 @@ from . import Finance #載入專案
 from . import product #載入專案
 from . import logistics #載入專案
 from . import management #載入專案
+from .stock import stock #載入專案
 from .SHOP import shopdata 
 from .SHOP import shopstock
 from .manage import contracts
 from django.conf import settings
 from siteapp import views
+
+from django.views import static ##新增
+from django.conf import settings ##新增
 
 '''
 from django.conf import settings 
@@ -44,6 +48,8 @@ urlpatterns = [
     #url(r'^$', first.admin),
 	#path('', siteviews.index),  # 来自服务器的请求为网站根目录时，由视图中的index函数进行处理。
 	#url('first', first.admin),
+    #url(r'^404/$', views.handler404),
+    #url(r'^500/$', views.handler500),
 	url('second', first.second),
 	url('pccss', first.pccss),
 	url('tablecss', first.tablecss),
@@ -87,11 +93,20 @@ urlpatterns = [
     url('contsdetel', contracts.contd),
     url('upload', contracts.upload),
 	url('F4311item', Finance.F4311item),#未驗收應付帳款查詢
-	#url('static', STATICFILES_DIR),
+	url('stockhsearch', stock.stockhsearch),#股東搜尋
+    url('stockh',stock.stockholder),#股東基本資料
+    url('stockd',stock.stockdetel),#股東基本資料明細
+	url('stockm', stock.stockmanag),#股票管理
+	url('stockpub', stock.stockpub),#股票發行
+	url('stockshift', stock.stockshift),#股票移轉
+	url(r'^static/(?P<path>.*)$', static.serve,{'document_root': settings.STATIC_ROOT}, name='static'),
+	url(r'^MEDIA/(?P<path>.*)$', static.serve,{'document_root': settings.MEDIA_ROOT}, name='MEDIA')	
 	#path('second', views.retest),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #urlpatterns += static('/static/', document_root=media_root)
 #urlpatterns += staticfiles_urlpatterns
+#handler404 = views.handler404
+#handler500 = views.handler500
 '''urlpatterns = [
     path('admin/', admin.site.urls),
 ]'''

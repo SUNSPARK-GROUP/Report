@@ -138,11 +138,14 @@ USE_L10N = True
 USE_TZ = True
 
 MEDIA_URL = '/MEDIA/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA').replace("\\", "/")
+MEDIA_ROOT = 'MEDIA' ## 新增行
+MEDIAFILES_DIR = os.path.join(BASE_DIR, 'MEDIA').replace("\\", "/")
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA').replace("\\", "/")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static' ## 新增行
 STATICFILES_DIR = os.path.join(BASE_DIR, 'static').replace("\\", "/")  
 #STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder","django.contrib.staticfiles.finders.AppDirectoriesFinder")
 #STATIC_ROOT = os.path.join(os.path.dirname(__file__),'static')
@@ -151,4 +154,5 @@ STATICFILES_DIR = os.path.join(BASE_DIR, 'static').replace("\\", "/")
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 DEBUG = False
 TEMPLATE_DEBUG = True
+#ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = ['*']
