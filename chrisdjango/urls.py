@@ -18,7 +18,7 @@ from django.contrib import staticfiles
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
-from django.conf.urls.static import static
+#from django.conf.urls.static import static
 from . import first #載入專案 chrisdjango下first.py
 from . import Finance #載入專案
 from . import product #載入專案
@@ -29,6 +29,9 @@ from .SHOP import shopstock
 from .manage import contracts
 from django.conf import settings
 from siteapp import views
+
+from django.views import static ##新增
+from django.conf import settings ##新增
 
 '''
 from django.conf import settings 
@@ -86,10 +89,12 @@ urlpatterns = [
     url('contracts', contracts.contracts),
     url('contsdetel', contracts.contd),
     url('upload', contracts.upload),
-	url('F4311item', Finance.F4311item),#未驗收應付帳款查詢
+    url('F4311item', Finance.F4311item),#未驗收應付帳款查詢
+	#url(r'^static/(?P<path>.*)$', static.serve,{'document_root': settings.STATIC_ROOT}, name='static'),
+	url(r'^MEDIA/(?P<path>.*)$', static.serve,{'document_root': settings.MEDIA_ROOT}, name='MEDIA'),	
 	#url('static', STATICFILES_DIR),
 	#path('second', views.retest),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #urlpatterns += static('/static/', document_root=media_root)
 #urlpatterns += staticfiles_urlpatterns
 '''urlpatterns = [
