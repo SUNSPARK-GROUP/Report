@@ -312,8 +312,9 @@ def set2jde(tday):
               remark1=remark[:12]
               remark2=remark[12:len(remark)]
             elif len(remark)>24:
-              remark1=remark[:12]
-              remark2=remark[12:24]
+              remark='備註請至原始訂單查看'
+              remark1=remark
+              remark2=''
             else: remark1=remark
           except:
             remark='備註請至原始訂單查看'
