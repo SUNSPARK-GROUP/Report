@@ -20,6 +20,7 @@ import openpyxl
 import win32com.client as win32
 import pyodbc
 import time
+import pymysql
 
 import os
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8' 
@@ -75,7 +76,8 @@ def productsts(request):
     sday=sday[:4]+sday[5:7]+sday[8:10]
     eday=eday[:4]+eday[5:7]+eday[8:10]
     #f.write(sday+'~'+eday)
-    connection206=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.206;DATABASE=TGSalary;UID=apuser;PWD=0920799339')
+    #connection206=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.206;DATABASE=TGSalary;UID=apuser;PWD=0920799339')
+    connection218=pymysql.connect(host='192.168.0.218', port=3306, user='root', passwd='TYGHBNujm', db='ccerp_tw001114hq',charset='utf8')
     connection214=pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.0.214;DATABASE=erps;UID=apuser;PWD=0920799339')
     context['imlitm1'] = imlitm1
     context['imlitm2'] = imlitm2
@@ -93,11 +95,15 @@ def productsts(request):
       title=['<th style="width:5%;">第二料號</th>','<th style="width:15%;">名稱</th>','<th style="width:15%;">供應商</th>','<th style="width:5%;">成本</th>','<th style="width:5%;">售價</th>','<th style="width:5%;">毛利%</th>','<th style="width:5%;">廠商編號</th>']
       #f.write(func)
       titlee=['第二料號','名稱','供應商','成本','售價','毛利%','廠商編號']	  
-      getbra=connection206.cursor()
+      getbra=connection218.cursor()
       #getbra2=connection206.cursor()
       prodl=connection214.cursor()
       #f.write('SELECT distinct(kindname) as kindname  FROM TGSalary.dbo.VIEWARTKIND')
-      getbra.execute('SELECT distinct(kindname) as kindname  FROM TGSalary.dbo.VIEWARTKIND') 
+      #getbra.execute('SELECT distinct(kindname) as kindname  FROM TGSalary.dbo.VIEWARTKIND') 
+      f.write("select distinct(a.brandname) as brandname from (select case when brandname like '%拉亞%' then '拉亞' else brandname end as brandname"
+	                 +" from viewbasicbrandinfoproductwhitelist_sub where string_20_1<>'z') a"+'\n')
+      getbra.execute("select distinct(a.brandname) as brandname from (select case when brandname like '%拉亞%' then '拉亞' when brandname like '%TINO%' then 'TINO' when brandname like '%喀漢堡%' then '喀漢堡' "
+	                 +"when brandname like '%FANI%' then '費尼' when brandname like '%VASA%' then '瓦薩' else brandname end as brandname from viewbasicbrandinfoproductwhitelist_sub where string_20_1<>'z') a")
       ds=0	
       dl=[]	  
       for b in getbra.fetchall():
@@ -108,11 +114,24 @@ def productsts(request):
         #f.write('<th style="width:5%;">'+b[0]+'</th>')
       #f.write(str(dl))
       ws1.append(titlee)
-      prodl.execute("SELECT W.*,F6.abalph,f6.cban8,F6.CBPRRC,CASE WHEN F6.CBPRRC>'0' THEN ROUND(((W.PR_I-F6.CBPRRC)/W.PR_I*100),1)"
-             +" ELSE '0' END AS SALEGP  FROM OPENQUERY(WEB206,'SELECT distinct(new_iditem) as new_iditem,nm_item,ID_ITEM,pr_i FROM TGSalary.dbo.VIEWARTKIND "
-             +" group by id_item,nm_item,pr_i,PR_CSTD,new_iditem  order by new_iditem' ) W,"
+      
+      #prodl.execute("SELECT W.*,F6.abalph,f6.cban8,F6.CBPRRC,CASE WHEN F6.CBPRRC>'0' THEN ROUND(((W.PR_I-F6.CBPRRC)/W.PR_I*100),1)"
+      #       +" ELSE '0' END AS SALEGP  FROM OPENQUERY(WEB206,'SELECT distinct(new_iditem) as new_iditem,nm_item,ID_ITEM,pr_i FROM TGSalary.dbo.VIEWARTKIND "
+      #       +" group by id_item,nm_item,pr_i,PR_CSTD,new_iditem  order by new_iditem' ) W,"
+      #       +" OPENQUERY(e910,'SELECT abalph,CBAN8,CBLITM,CBPRRC*1.05 as CBPRRC FROM PRODDTA.VS_F41061 WHERE  CBEXDJ>=''"+nday+"''') F6 "
+      #       +" WHERE F6.CBLITM= W.NEW_IDITEM  ORDER BY W.NEW_IDITEM  ") 
+      f.write("SELECT W.*,F6.abalph,f6.cban8,F6.CBPRRC,CASE WHEN F6.CBPRRC>'0' THEN ROUND(((W.PR_I-F6.CBPRRC)/W.PR_I*100),1)"
+             +" ELSE '0' END AS SALEGP  FROM OPENQUERY(mysql,'select string_20_1 as new_iditem,string_50_1 as nm_item,string_20_1 as ID_ITEM "
+             +",Double_3 as pr_i from basicproductinfo where string_20_1 in (select productid from  viewbasicbrandinfoproductwhitelist_sub "
+             +"where string_20_1<>''z'') ') W,"
              +" OPENQUERY(e910,'SELECT abalph,CBAN8,CBLITM,CBPRRC*1.05 as CBPRRC FROM PRODDTA.VS_F41061 WHERE  CBEXDJ>=''"+nday+"''') F6 "
-             +" WHERE F6.CBLITM= W.NEW_IDITEM  ORDER BY W.NEW_IDITEM  ") 
+             +" WHERE F6.CBLITM= W.NEW_IDITEM  ORDER BY W.NEW_IDITEM  "+'\n')
+      prodl.execute("SELECT W.*,F6.abalph,f6.cban8,F6.CBPRRC,CASE WHEN F6.CBPRRC>'0' THEN ROUND(((W.PR_I-F6.CBPRRC)/W.PR_I*100),1)"
+             +" ELSE '0' END AS SALEGP  FROM OPENQUERY(mysql,'select string_20_1 as new_iditem,string_50_1 as nm_item,string_20_1 as ID_ITEM "
+             +",Double_3 as pr_i from basicproductinfo where string_20_1 in (select productid from  viewbasicbrandinfoproductwhitelist_sub "
+             +"where string_20_1<>''z'') ') W,"
+             +" OPENQUERY(e910,'SELECT abalph,CBAN8,CBLITM,CBPRRC*1.05 as CBPRRC FROM PRODDTA.VS_F41061 WHERE  CBEXDJ>=''"+nday+"''') F6 "
+             +" WHERE F6.CBLITM= W.NEW_IDITEM  ORDER BY W.NEW_IDITEM  ")
       
       for p in prodl.fetchall():
         tproduct=[]
@@ -124,12 +143,14 @@ def productsts(request):
         tproduct.append(str(p[7]))
         tproduct.append(str(p[5]))
         #f.write("SELECT kindname FROM TGSalary.dbo.VIEWARTKIND where new_iditem = '"+str(p[0])+"'")
-        getbra.execute("SELECT kindname FROM TGSalary.dbo.VIEWARTKIND where new_iditem = '"+str(p[0])+"'")
+        #getbra.execute("SELECT kindname FROM TGSalary.dbo.VIEWARTKIND where new_iditem = '"+str(p[0])+"'")        
+        getbra.execute("select  case when brandname like '%拉亞%' then '拉亞' when brandname like '%TINO%' then 'TINO' when brandname like '%FANI%' then '費尼' when brandname like '%VASA%' then '瓦薩'"
+		           +"when brandname like '%喀漢堡%' then '喀漢堡'   else brandname end,brandname from  viewbasicbrandinfoproductwhitelist_sub where productid= '"+str(p[0])+"' and string_20_1<>'z'")
         dlt=[]
         for b2 in getbra.fetchall():
-          #f.write(b2[0])
+          #f.write('1.'+str(b2[0])+'\n')
           dlt.append(dl.index(str(b2[0])))
-          #f.write(dl.index(str(b2[0]))+'\n')
+          #f.write(str(dlt))          
         l=0
         #f.write(str(dlt)+'\n')		  
         #f.write(str(ds))
@@ -336,6 +357,7 @@ def productsts(request):
       prodls.append(tpl)
     context['prodls']=prodls
   return render(request, 'product//productsts.html',context )#傳入參數
+  f.write('close')
   f.close()
 def OracleSalesCalc(request):
   context= {}
@@ -356,7 +378,7 @@ def OracleSalesCalc(request):
       firstr=" and  (shdel1 not like '%首批%' and shdel2  not like '%首批%') "
     else:
       firstr=""
-    #f.write(firstr)
+    f.write(firstr)
     context['area01']= request.GET['area01']
     area.execute("Select DISTINCT LEFT(AREANO,1)AREANO,LEFT(AREANAME,1) AREANAME from SalesArea where areano<>'TINO'")
     area0=[]
