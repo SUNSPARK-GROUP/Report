@@ -1125,7 +1125,7 @@ def pettycash(request):#零用金待轉項目查詢
     gday=[]#總帳日期
     form=[]
     ser=CONMYSQL("SELECT h.formsflow_id FROM hplus_formsflow h where"+
-    " formsflow_form IN('5431','5477') and formsflow_finished >= '"+sday+" 00:00:00' and formsflow_finished <= '"+eday+" 23:59:59' and formsflow_state>1")
+    " formsflow_form IN('5431','5477','5527','5529') and formsflow_finished >= '"+sday+" 00:00:00' and formsflow_finished <= '"+eday+" 23:59:59' and formsflow_state>1")
     for s in ser:
       cun = str(s[0])
       cuns = cun.strip(' ')
